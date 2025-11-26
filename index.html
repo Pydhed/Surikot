@@ -1,0 +1,1923 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love Hub - Сурикат & Кот</title>
+    <style>
+        :root {
+            --color-primary: #ff6b9d;
+            --color-secondary: #c44569;
+            --color-accent: #ffa07a;
+            --color-bg: #fff5f7;
+            --color-surface: #ffffff;
+            --color-text: #2d3436;
+            --color-text-light: #636e72;
+            --color-border: #ffe0e9;
+            --color-success: #00b894;
+            --color-warning: #fdcb6e;
+            --color-info: #74b9ff;
+            --shadow-sm: 0 2px 8px rgba(255, 107, 157, 0.1);
+            --shadow-md: 0 4px 16px rgba(255, 107, 157, 0.15);
+            --shadow-lg: 0 8px 24px rgba(255, 107, 157, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #ffeef2 0%, #fff5f7 100%);
+            color: var(--color-text);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Login Screen */
+        .login-screen {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding: 20px;
+            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+        }
+
+        .login-box {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: var(--shadow-lg);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+
+        .login-box h1 {
+            color: var(--color-primary);
+            margin-bottom: 10px;
+            font-size: 2em;
+        }
+
+        .login-box p {
+            color: var(--color-text-light);
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            text-align: left;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--color-text);
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid var(--color-border);
+            border-radius: 10px;
+            font-size: 16px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: var(--color-primary);
+            color: white;
+            width: 100%;
+        }
+
+        .btn-primary:hover {
+            background: var(--color-secondary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .btn-secondary {
+            background: var(--color-border);
+            color: var(--color-text);
+        }
+
+        .btn-secondary:hover {
+            background: var(--color-accent);
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 14px;
+        }
+
+        /* Main App */
+        .app-container {
+            display: none;
+        }
+
+        .app-header {
+            background: white;
+            padding: 15px 20px;
+            box-shadow: var(--shadow-sm);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .user-profiles {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .user-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: 3px solid var(--color-primary);
+            cursor: pointer;
+            object-fit: cover;
+            background: var(--color-border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .hearts-separator {
+            color: var(--color-primary);
+            font-size: 20px;
+        }
+
+        .logout-btn {
+            padding: 8px 16px;
+            background: transparent;
+            border: 2px solid var(--color-primary);
+            color: var(--color-primary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .logout-btn:hover {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .main-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .widget {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: var(--shadow-sm);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .widget:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .widget-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--color-primary);
+        }
+
+        .counter-large {
+            font-size: 3em;
+            font-weight: bold;
+            color: var(--color-secondary);
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .counter-label {
+            text-align: center;
+            color: var(--color-text-light);
+            font-size: 0.9em;
+        }
+
+        .countdown-grid {
+            display: grid;
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .countdown-item {
+            background: var(--color-bg);
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .countdown-info h4 {
+            color: var(--color-text);
+            margin-bottom: 5px;
+        }
+
+        .countdown-info p {
+            color: var(--color-text-light);
+            font-size: 0.85em;
+        }
+
+        .countdown-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--color-primary);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--color-border);
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+            transition: width 0.5s ease;
+        }
+
+        .achievements {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .achievement {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            background: var(--color-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2em;
+            border: 3px solid var(--color-border);
+            position: relative;
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .achievement:hover {
+            transform: scale(1.1);
+        }
+
+        .achievement.unlocked {
+            border-color: var(--color-primary);
+            background: white;
+        }
+
+        .achievement-year {
+            position: absolute;
+            bottom: -25px;
+            font-size: 0.4em;
+            color: var(--color-text-light);
+        }
+
+        /* Navigation */
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            background: white;
+            padding: 15px;
+            border-radius: 15px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .nav-tab {
+            padding: 10px 20px;
+            background: transparent;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            color: var(--color-text);
+            font-size: 15px;
+        }
+
+        .nav-tab:hover {
+            background: var(--color-bg);
+        }
+
+        .nav-tab.active {
+            background: var(--color-primary);
+            color: white;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* Cards Section */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+        }
+
+        .card-item {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: 2px solid var(--color-border);
+        }
+
+        .card-item:hover {
+            transform: scale(1.05);
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-md);
+        }
+
+        .card-emoji {
+            font-size: 3em;
+            margin-bottom: 10px;
+        }
+
+        .card-text {
+            color: var(--color-text);
+            font-size: 0.9em;
+        }
+
+        /* List Items */
+        .list-container {
+            background: white;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .add-item-form {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .add-item-form input,
+        .add-item-form textarea {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid var(--color-border);
+            border-radius: 10px;
+            font-size: 15px;
+            font-family: inherit;
+        }
+
+        .add-item-form input:focus,
+        .add-item-form textarea:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .list-items {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .list-item {
+            background: var(--color-bg);
+            padding: 15px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s;
+        }
+
+        .list-item:hover {
+            background: var(--color-border);
+        }
+
+        .list-item-content {
+            flex: 1;
+        }
+
+        .list-item-text {
+            color: var(--color-text);
+            margin-bottom: 5px;
+        }
+
+        .list-item-date {
+            color: var(--color-text-light);
+            font-size: 0.85em;
+        }
+
+        .delete-btn {
+            background: transparent;
+            border: none;
+            color: var(--color-secondary);
+            cursor: pointer;
+            font-size: 1.2em;
+            padding: 5px 10px;
+            transition: transform 0.2s;
+        }
+
+        .delete-btn:hover {
+            transform: scale(1.2);
+        }
+
+        /* Chat */
+        .chat-container {
+            background: white;
+            border-radius: 15px;
+            box-shadow: var(--shadow-sm);
+            height: 600px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .chat-message {
+            max-width: 70%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            word-wrap: break-word;
+        }
+
+        .chat-message.sent {
+            align-self: flex-end;
+            background: var(--color-primary);
+            color: white;
+            border-bottom-right-radius: 5px;
+        }
+
+        .chat-message.received {
+            align-self: flex-start;
+            background: var(--color-bg);
+            color: var(--color-text);
+            border-bottom-left-radius: 5px;
+        }
+
+        .chat-message-time {
+            font-size: 0.75em;
+            opacity: 0.7;
+            margin-top: 5px;
+        }
+
+        .chat-input-area {
+            padding: 15px;
+            border-top: 2px solid var(--color-border);
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input-area input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid var(--color-border);
+            border-radius: 25px;
+            font-size: 15px;
+        }
+
+        .chat-input-area input:focus {
+            outline: none;
+            border-color: var(--color-primary);
+        }
+
+        .send-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--color-primary);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1.5em;
+            transition: all 0.3s;
+        }
+
+        .send-btn:hover {
+            background: var(--color-secondary);
+            transform: scale(1.1);
+        }
+
+        /* Drawing Board */
+        .drawing-container {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .drawing-tools {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .color-picker {
+            width: 50px;
+            height: 40px;
+            border: 2px solid var(--color-border);
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .brush-size {
+            padding: 8px 12px;
+            border: 2px solid var(--color-border);
+            border-radius: 8px;
+        }
+
+        #drawingCanvas {
+            border: 2px solid var(--color-border);
+            border-radius: 10px;
+            cursor: crosshair;
+            display: block;
+            width: 100%;
+            max-width: 800px;
+            height: 500px;
+        }
+
+        .drawing-gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .gallery-item {
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: var(--shadow-sm);
+            cursor: pointer;
+            transition: transform 0.3s;
+        }
+
+        .gallery-item:hover {
+            transform: scale(1.05);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        /* Love Signals */
+        .love-signals {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            z-index: 99;
+        }
+
+        .love-signal-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            background: var(--color-primary);
+            color: white;
+            font-size: 2em;
+            cursor: pointer;
+            box-shadow: var(--shadow-md);
+            transition: all 0.3s;
+        }
+
+        .love-signal-btn:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .floating-heart {
+            position: fixed;
+            font-size: 2em;
+            pointer-events: none;
+            animation: floatUp 3s ease-out forwards;
+            z-index: 9999;
+        }
+
+        @keyframes floatUp {
+            0% {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-200px) scale(1.5);
+            }
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 20px;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 1.5em;
+            color: var(--color-primary);
+        }
+
+        .close-modal {
+            background: transparent;
+            border: none;
+            font-size: 1.5em;
+            cursor: pointer;
+            color: var(--color-text-light);
+        }
+
+        .avatar-upload {
+            text-align: center;
+        }
+
+        .avatar-preview {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            margin: 20px auto;
+            border: 4px solid var(--color-primary);
+            object-fit: cover;
+            background: var(--color-bg);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4em;
+        }
+
+        .file-input-label {
+            display: inline-block;
+            padding: 10px 20px;
+            background: var(--color-primary);
+            color: white;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .file-input-label:hover {
+            background: var(--color-secondary);
+        }
+
+        input[type="file"] {
+            display: none;
+        }
+
+        /* Media Section */
+        .media-grid {
+            display: grid;
+            gap: 15px;
+        }
+
+        .media-item {
+            background: var(--color-bg);
+            padding: 15px;
+            border-radius: 10px;
+        }
+
+        .media-item h4 {
+            color: var(--color-primary);
+            margin-bottom: 10px;
+        }
+
+        .media-content {
+            color: var(--color-text);
+            margin-bottom: 5px;
+        }
+
+        .media-author {
+            color: var(--color-text-light);
+            font-size: 0.85em;
+        }
+
+        /* Quiz */
+        .quiz-container {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .quiz-question {
+            font-size: 1.3em;
+            color: var(--color-text);
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .quiz-options {
+            display: grid;
+            gap: 10px;
+        }
+
+        .quiz-option {
+            padding: 15px;
+            background: var(--color-bg);
+            border: 2px solid var(--color-border);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .quiz-option:hover {
+            background: var(--color-border);
+            border-color: var(--color-primary);
+        }
+
+        .quiz-score {
+            text-align: center;
+            font-size: 2em;
+            color: var(--color-primary);
+            margin-top: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .dashboard {
+                grid-template-columns: 1fr;
+            }
+
+            .nav-tabs {
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+
+            .user-profiles {
+                flex-direction: column;
+                gap: 5px;
+            }
+
+            .header-left {
+                flex-direction: column;
+                gap: 10px;
+                align-items: flex-start;
+            }
+
+            .chat-message {
+                max-width: 85%;
+            }
+
+            #drawingCanvas {
+                height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-box">
+            <h1>💕 Love Hub</h1>
+            <p>Добро пожаловать в наше особенное место</p>
+            <form id="loginForm">
+                <div class="form-group">
+                    <label>Логин</label>
+                    <input type="text" id="loginUsername" required>
+                </div>
+                <div class="form-group">
+                    <label>Пароль</label>
+                    <input type="password" id="loginPassword" required>
+                </div>
+                <button type="submit" class="btn btn-primary">Войти</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div class="app-container" id="appContainer">
+        <header class="app-header">
+            <div class="header-left">
+                <div class="logo">💕 Love Hub</div>
+                <div class="user-profiles">
+                    <div class="user-avatar" id="surikatAvatar" onclick="openAvatarModal('surikat')">🦝</div>
+                    <span class="hearts-separator">💕</span>
+                    <div class="user-avatar" id="kotAvatar" onclick="openAvatarModal('kot')">🐱</div>
+                </div>
+            </div>
+            <button class="logout-btn" onclick="logout()">Выйти</button>
+        </header>
+
+        <main class="main-content">
+            <!-- Dashboard Widgets -->
+            <div class="dashboard">
+                <div class="widget">
+                    <div class="widget-title">💫 Дней вместе</div>
+                    <div class="counter-large" id="daysCounter">0</div>
+                    <div class="counter-label">дней с момента знакомства</div>
+                </div>
+
+                <div class="widget">
+                    <div class="widget-title">🎂 Ближайшее событие</div>
+                    <div id="nextEvent"></div>
+                </div>
+
+                <div class="widget">
+                    <div class="widget-title">🏆 Достижения</div>
+                    <div class="achievements" id="achievementsContainer"></div>
+                </div>
+            </div>
+
+            <!-- Countdown Section -->
+            <div class="widget">
+                <div class="widget-title">📅 Обратный отсчет</div>
+                <div class="countdown-grid" id="countdownGrid"></div>
+            </div>
+
+            <!-- Navigation Tabs -->
+            <nav class="nav-tabs">
+                <button class="nav-tab active" onclick="switchTab('cards')">💌 Открытки</button>
+                <button class="nav-tab" onclick="switchTab('wishes')">⭐ Желания</button>
+                <button class="nav-tab" onclick="switchTab('plans')">📝 Планы</button>
+                <button class="nav-tab" onclick="switchTab('places')">📍 Места</button>
+                <button class="nav-tab" onclick="switchTab('ideas')">💡 Идеи</button>
+                <button class="nav-tab" onclick="switchTab('goals')">🎯 Цели</button>
+                <button class="nav-tab" onclick="switchTab('guide')">🗺️ Путеводитель</button>
+                <button class="nav-tab" onclick="switchTab('chat')">💬 Чат</button>
+                <button class="nav-tab" onclick="switchTab('drawing')">🎨 Доска</button>
+                <button class="nav-tab" onclick="switchTab('media')">📚 Медиа</button>
+                <button class="nav-tab" onclick="switchTab('extras')">🎁 Бонусы</button>
+                <button class="nav-tab" onclick="switchTab('quiz')">🎮 Викторина</button>
+            </nav>
+
+            <!-- Tab Contents -->
+            <div id="cardsTab" class="tab-content active">
+                <div class="list-container">
+                    <h2 style="margin-bottom: 20px;">💌 Виртуальные открытки</h2>
+                    <div class="cards-grid" id="cardsGrid"></div>
+                    <div style="margin-top: 30px;">
+                        <h3 style="margin-bottom: 15px;">Отправить свою открытку</h3>
+                        <div class="add-item-form">
+                            <input type="file" id="customCardUpload" accept="image/*" onchange="uploadCustomCard()">
+                            <label for="customCardUpload" class="file-input-label">Выбрать картинку</label>
+                        </div>
+                        <div id="customCardsGrid" class="cards-grid" style="margin-top: 20px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="wishesTab" class="tab-content">
+                <div class="list-container">
+                    <h2 style="margin-bottom: 20px;">⭐ Совместный список желаний</h2>
+                    <div class="add-item-form">
+                        <input type="text" id="wishInput" placeholder="Введите желание...">
+                        <button class="btn btn-primary btn-small" onclick="addWish()">Добавить</button>
+                    </div>
+                    <div class="list-items" id="wishesList"></div>
+                </div>
+            </div>
+
+            <div id="plansTab" class="tab-content">
+                <div class="list-container">
+                    <h2 style="margin-bottom: 20px;">📝 Планы и идеи</h2>
+                    <div class="add-item-form" style="flex-direction: column;">
+                        <textarea id="planInput" placeholder="Опишите план..." rows="3"></textarea>
+                        <input type="date" id="planDate">
+                        <button class="btn btn-primary btn-small" onclick="addPlan()">Добавить</button>
+                    </div>
+                    <div class="list-items" id="plansList"></div>
+                </div>
+            </div>
+
+            <div id="placesTab" class="tab-content">
+                <div class="list-container">
+                    <h2 style="margin-bottom: 20px;">📍 Места, куда хотим сходить</h2>
+                    <div class="add-item-form">
+                        <input type="text" id="placeInput" placeholder="Название места...">
+                        <button class="btn btn-primary btn-small" onclick="addPlace()">Добавить</button>
+                    </div>
+                    <div class="list-items" id="placesList"></div>
+                </div>
+            </div>
+
+            <div id="ideasTab" class="tab-content">
+                <div class="list-container">
+                    <h2 style="margin-bottom: 20px;">💡 Идеи для общих дел</h2>
+                    <div class="add-item-form">
+                        <input type="text" id="ideaInput" placeholder="Ваша идея...">
+                        <button class="btn btn-primary btn-small" onclick="addIdea()">Добавить</button>
+                    </div>
+                    <div class="list-items" id="ideasList"></div>
+                </div>
+            </div>
+
+            <div id="goalsTab" class="tab-content">
+                <div class="list-container">
+                    <h2 style="margin-bottom: 20px;">🎯 Совместные цели и мечты</h2>
+                    <div class="add-item-form">
+                        <input type="text" id="goalInput" placeholder="Наша цель...">
+                        <button class="btn btn-primary btn-small" onclick="addGoal()">Добавить</button>
+                    </div>
+                    <div class="list-items" id="goalsList"></div>
+                </div>
+            </div>
+
+            <div id="guideTab" class="tab-content">
+                <div class="list-container">
+                    <h2 style="margin-bottom: 20px;">🗺️ Путеводитель по любимым местам</h2>
+                    <div class="add-item-form" style="flex-direction: column;">
+                        <input type="text" id="guideNameInput" placeholder="Название места...">
+                        <textarea id="guideDescInput" placeholder="Описание, что здесь особенного..." rows="3"></textarea>
+                        <button class="btn btn-primary btn-small" onclick="addGuidePlace()">Добавить</button>
+                    </div>
+                    <div class="list-items" id="guideList"></div>
+                </div>
+            </div>
+
+            <div id="chatTab" class="tab-content">
+                <div class="chat-container">
+                    <div class="chat-messages" id="chatMessages"></div>
+                    <div class="chat-input-area">
+                        <input type="text" id="chatInput" placeholder="Напишите сообщение...">
+                        <button class="send-btn" onclick="sendMessage()">➤</button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="drawingTab" class="tab-content">
+                <div class="drawing-container">
+                    <h2 style="margin-bottom: 20px;">🎨 Совместная доска для рисования</h2>
+                    <div class="drawing-tools">
+                        <input type="color" id="colorPicker" class="color-picker" value="#ff6b9d">
+                        <input type="range" id="brushSize" class="brush-size" min="1" max="20" value="3">
+                        <button class="btn btn-secondary btn-small" onclick="clearCanvas()">Очистить</button>
+                        <button class="btn btn-primary btn-small" onclick="saveDrawing()">Сохранить в галерею</button>
+                        <button class="btn btn-secondary btn-small" onclick="newDrawing()">Новый рисунок</button>
+                    </div>
+                    <canvas id="drawingCanvas"></canvas>
+                    <h3 style="margin-top: 30px; margin-bottom: 15px;">Галерея рисунков</h3>
+                    <div class="drawing-gallery" id="drawingGallery"></div>
+                </div>
+            </div>
+
+            <div id="mediaTab" class="tab-content">
+                <div class="list-container">
+                    <h2 style="margin-bottom: 20px;">📚 Я сейчас читаю/смотрю/слушаю</h2>
+                    
+                    <h3 style="margin-top: 20px; margin-bottom: 10px;">📖 Читаю</h3>
+                    <div class="add-item-form">
+                        <input type="text" id="readingInput" placeholder="Название книги/автор...">
+                        <button class="btn btn-primary btn-small" onclick="addMedia('reading')">Добавить</button>
+                    </div>
+                    <div class="media-grid" id="readingList"></div>
+
+                    <h3 style="margin-top: 30px; margin-bottom: 10px;">📺 Смотрю</h3>
+                    <div class="add-item-form">
+                        <input type="text" id="watchingInput" placeholder="Название фильма/сериала...">
+                        <button class="btn btn-primary btn-small" onclick="addMedia('watching')">Добавить</button>
+                    </div>
+                    <div class="media-grid" id="watchingList"></div>
+
+                    <h3 style="margin-top: 30px; margin-bottom: 10px;">🎵 Слушаю</h3>
+                    <div class="add-item-form">
+                        <input type="text" id="listeningInput" placeholder="Исполнитель/трек...">
+                        <button class="btn btn-primary btn-small" onclick="addMedia('listening')">Добавить</button>
+                    </div>
+                    <div class="media-grid" id="listeningList"></div>
+                </div>
+            </div>
+
+            <div id="extrasTab" class="tab-content">
+                <div class="dashboard">
+                    <div class="widget">
+                        <div class="widget-title">⏰ Капсула времени</div>
+                        <p style="margin-bottom: 15px; color: var(--color-text-light);">Запишите послание, которое откроется в будущем</p>
+                        <div class="add-item-form" style="flex-direction: column;">
+                            <textarea id="capsuleInput" placeholder="Ваше послание..." rows="3"></textarea>
+                            <input type="date" id="capsuleDate">
+                            <button class="btn btn-primary btn-small" onclick="addTimeCapsule()">Создать</button>
+                        </div>
+                        <div class="list-items" id="capsulesList" style="margin-top: 20px;"></div>
+                    </div>
+
+                    <div class="widget">
+                        <div class="widget-title">💝 Банк комплиментов</div>
+                        <p style="margin-bottom: 15px; color: var(--color-text-light);">Случайный комплимент для любимого человека</p>
+                        <button class="btn btn-primary" onclick="showRandomCompliment()">Получить комплимент</button>
+                        <p id="complimentText" style="margin-top: 20px; font-size: 1.1em; text-align: center; color: var(--color-primary);"></p>
+                    </div>
+
+                    <div class="widget">
+                        <div class="widget-title">😊 Mood Tracker</div>
+                        <p style="margin-bottom: 15px; color: var(--color-text-light);">Как вы себя чувствуете сегодня?</p>
+                        <div class="cards-grid">
+                            <div class="card-item" onclick="saveMood('😊', 'Отлично')">
+                                <div class="card-emoji">😊</div>
+                                <div class="card-text">Отлично</div>
+                            </div>
+                            <div class="card-item" onclick="saveMood('🙂', 'Хорошо')">
+                                <div class="card-emoji">🙂</div>
+                                <div class="card-text">Хорошо</div>
+                            </div>
+                            <div class="card-item" onclick="saveMood('😐', 'Нормально')">
+                                <div class="card-emoji">😐</div>
+                                <div class="card-text">Нормально</div>
+                            </div>
+                            <div class="card-item" onclick="saveMood('😔', 'Грустно')">
+                                <div class="card-emoji">😔</div>
+                                <div class="card-text">Грустно</div>
+                            </div>
+                        </div>
+                        <div id="moodHistory" style="margin-top: 20px;"></div>
+                    </div>
+
+                    <div class="widget">
+                        <div class="widget-title">🙏 Книга благодарностей</div>
+                        <p style="margin-bottom: 15px; color: var(--color-text-light);">За что вы благодарны сегодня?</p>
+                        <div class="add-item-form" style="flex-direction: column;">
+                            <textarea id="gratitudeInput" placeholder="Я благодарен за..." rows="3"></textarea>
+                            <button class="btn btn-primary btn-small" onclick="addGratitude()">Добавить</button>
+                        </div>
+                        <div class="list-items" id="gratitudeList" style="margin-top: 20px;"></div>
+                    </div>
+
+                    <div class="widget">
+                        <div class="widget-title">🎵 Наш плейлист</div>
+                        <p style="margin-bottom: 15px; color: var(--color-text-light);">Любимые песни</p>
+                        <div class="add-item-form">
+                            <input type="text" id="musicInput" placeholder="Название - Исполнитель">
+                            <button class="btn btn-primary btn-small" onclick="addMusic()">Добавить</button>
+                        </div>
+                        <div class="list-items" id="musicList" style="margin-top: 20px;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="quizTab" class="tab-content">
+                <div class="quiz-container">
+                    <h2 style="margin-bottom: 20px; text-align: center;">🎮 Викторина для пар</h2>
+                    <div class="quiz-question" id="quizQuestion"></div>
+                    <div class="quiz-options" id="quizOptions"></div>
+                    <div class="quiz-score" id="quizScore"></div>
+                    <div style="text-align: center; margin-top: 20px;">
+                        <button class="btn btn-primary" onclick="loadQuizQuestion()">Следующий вопрос</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <!-- Love Signals -->
+        <div class="love-signals">
+            <button class="love-signal-btn" onclick="sendLoveSignal('❤️')" title="Отправить сердечко">❤️</button>
+            <button class="love-signal-btn" onclick="sendLoveSignal('💕')" title="Отправить поцелуй">💋</button>
+            <button class="love-signal-btn" onclick="sendLoveSignal('🥰')" title="Обнять">🤗</button>
+        </div>
+    </div>
+
+    <!-- Avatar Modal -->
+    <div class="modal" id="avatarModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Загрузить аватар</h2>
+                <button class="close-modal" onclick="closeAvatarModal()">×</button>
+            </div>
+            <div class="avatar-upload">
+                <div class="avatar-preview" id="avatarPreview">📷</div>
+                <input type="file" id="avatarInput" accept="image/*" onchange="uploadAvatar()">
+                <label for="avatarInput" class="file-input-label">Выбрать фото</label>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Constants
+        const MEETING_DATE = new Date('2024-06-24');
+        const CREDENTIALS = { username: 'Surikat', password: 'Chelovek' };
+        const BIRTHDAYS = {
+            surikat: { month: 8, day: 12, name: 'День рождения Суриката' },
+            kot: { month: 3, day: 18, name: 'День рождения Кота' }
+        };
+
+        // State
+        let currentUser = null;
+        let currentAvatarTarget = null;
+        let isDrawing = false;
+        let canvas, ctx;
+
+        // Base cards
+        const baseCards = [
+            { emoji: '❤️', text: 'Я тебя люблю' },
+            { emoji: '🥰', text: 'Ты самый лучший' },
+            { emoji: '😘', text: 'Целую тебя' },
+            { emoji: '🤗', text: 'Обнимаю крепко' },
+            { emoji: '💕', text: 'Скучаю по тебе' },
+            { emoji: '🌟', text: 'Ты мой герой' },
+            { emoji: '🌹', text: 'Ты прекрасна' },
+            { emoji: '💖', text: 'Ты особенный' },
+            { emoji: '🎁', text: 'Сюрприз для тебя' },
+            { emoji: '☀️', text: 'Доброе утро, солнышко' },
+            { emoji: '🌙', text: 'Спокойной ночи' },
+            { emoji: '💪', text: 'Я верю в тебя' }
+        ];
+
+        // Wishes templates
+        const wishesTemplates = [
+            'Съездить в путешествие вместе',
+            'Научиться готовить новое блюдо',
+            'Посмотреть все фильмы из списка',
+            'Завести домашнего питомца',
+            'Сделать ремонт',
+            'Отпраздновать годовщину особенно'
+        ];
+
+        // Compliments bank
+        const compliments = [
+            'Ты делаешь мою жизнь ярче каждый день',
+            'С тобой я чувствую себя самым счастливым человеком',
+            'Твоя улыбка - самое прекрасное, что я видел',
+            'Ты вдохновляешь меня быть лучше',
+            'Я благодарен судьбе за встречу с тобой',
+            'Ты мой лучший друг и любовь всей жизни',
+            'С тобой даже обычные моменты становятся особенными',
+            'Твоя поддержка значит для меня всё',
+            'Ты умеешь делать меня счастливым просто своим присутствием',
+            'Я люблю тебя больше, чем вчера, но меньше, чем завтра'
+        ];
+
+        // Quiz questions
+        const quizQuestions = [
+            {
+                question: 'Какой фильм вы смотрели на первом свидании?',
+                options: ['Комедия', 'Драма', 'Боевик', 'Мы не смотрели фильм']
+            },
+            {
+                question: 'Какое любимое блюдо вашего партнера?',
+                options: ['Паста', 'Суши', 'Пицца', 'Домашняя еда']
+            },
+            {
+                question: 'Где бы ваш партнер хотел провести идеальный отпуск?',
+                options: ['На пляже', 'В горах', 'В городе', 'Дома']
+            },
+            {
+                question: 'Какое хобби вашего партнера самое любимое?',
+                options: ['Спорт', 'Чтение', 'Готовка', 'Творчество']
+            },
+            {
+                question: 'Какой подарок порадует вашего партнера больше всего?',
+                options: ['Книга', 'Гаджет', 'Украшение', 'Впечатление']
+            }
+        ];
+
+        // Login
+        document.getElementById('loginForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const username = document.getElementById('loginUsername').value;
+            const password = document.getElementById('loginPassword').value;
+            
+            if (username === CREDENTIALS.username && password === CREDENTIALS.password) {
+                currentUser = username;
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('appContainer').style.display = 'block';
+                initializeApp();
+            } else {
+                alert('Неверный логин или пароль');
+            }
+        });
+
+        // Initialize app
+        function initializeApp() {
+            loadAvatars();
+            updateCounters();
+            renderBaseCards();
+            renderCustomCards();
+            loadAllLists();
+            loadChat();
+            initDrawingCanvas();
+            loadDrawingGallery();
+            loadMedia();
+            loadExtras();
+            loadQuizQuestion();
+            setInterval(updateCounters, 60000);
+        }
+
+        // Avatars
+        function loadAvatars() {
+            const surikatAvatar = localStorage.getItem('surikatAvatar');
+            const kotAvatar = localStorage.getItem('kotAvatar');
+            
+            if (surikatAvatar) {
+                document.getElementById('surikatAvatar').innerHTML = `<img src="${surikatAvatar}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+            }
+            if (kotAvatar) {
+                document.getElementById('kotAvatar').innerHTML = `<img src="${kotAvatar}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+            }
+        }
+
+        function openAvatarModal(target) {
+            currentAvatarTarget = target;
+            document.getElementById('avatarModal').classList.add('active');
+            const currentAvatar = localStorage.getItem(`${target}Avatar`);
+            if (currentAvatar) {
+                document.getElementById('avatarPreview').innerHTML = `<img src="${currentAvatar}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+            } else {
+                document.getElementById('avatarPreview').textContent = '📷';
+            }
+        }
+
+        function closeAvatarModal() {
+            document.getElementById('avatarModal').classList.remove('active');
+        }
+
+        function uploadAvatar() {
+            const file = document.getElementById('avatarInput').files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const dataUrl = e.target.result;
+                    localStorage.setItem(`${currentAvatarTarget}Avatar`, dataUrl);
+                    document.getElementById('avatarPreview').innerHTML = `<img src="${dataUrl}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+                    document.getElementById(`${currentAvatarTarget}Avatar`).innerHTML = `<img src="${dataUrl}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
+                    closeAvatarModal();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        // Counters
+        function updateCounters() {
+            const now = new Date();
+            const daysTogether = Math.floor((now - MEETING_DATE) / (1000 * 60 * 60 * 24));
+            document.getElementById('daysCounter').textContent = daysTogether;
+
+            // Countdown
+            const events = [];
+            const currentYear = now.getFullYear();
+            
+            // Birthdays
+            Object.entries(BIRTHDAYS).forEach(([key, data]) => {
+                let eventDate = new Date(currentYear, data.month - 1, data.day);
+                if (eventDate < now) {
+                    eventDate = new Date(currentYear + 1, data.month - 1, data.day);
+                }
+                const daysLeft = Math.ceil((eventDate - now) / (1000 * 60 * 60 * 24));
+                events.push({ name: data.name, date: eventDate, daysLeft });
+            });
+
+            // Anniversary
+            let anniversaryDate = new Date(currentYear, MEETING_DATE.getMonth(), MEETING_DATE.getDate());
+            if (anniversaryDate < now) {
+                anniversaryDate = new Date(currentYear + 1, MEETING_DATE.getMonth(), MEETING_DATE.getDate());
+            }
+            const anniversaryDays = Math.ceil((anniversaryDate - now) / (1000 * 60 * 60 * 24));
+            events.push({ name: 'Годовщина знакомства', date: anniversaryDate, daysLeft: anniversaryDays });
+
+            events.sort((a, b) => a.daysLeft - b.daysLeft);
+
+            // Next event
+            if (events.length > 0) {
+                const nextEvent = events[0];
+                document.getElementById('nextEvent').innerHTML = `
+                    <div class="countdown-item">
+                        <div class="countdown-info">
+                            <h4>${nextEvent.name}</h4>
+                            <p>${nextEvent.date.toLocaleDateString('ru-RU')}</p>
+                        </div>
+                        <div class="countdown-number">${nextEvent.daysLeft}</div>
+                    </div>
+                `;
+            }
+
+            // All countdowns
+            const countdownHtml = events.map(event => {
+                const progress = Math.max(0, 100 - (event.daysLeft / 365 * 100));
+                return `
+                    <div class="countdown-item">
+                        <div style="flex: 1;">
+                            <div class="countdown-info">
+                                <h4>${event.name}</h4>
+                                <p>${event.date.toLocaleDateString('ru-RU')}</p>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: ${progress}%"></div>
+                            </div>
+                        </div>
+                        <div class="countdown-number">${event.daysLeft}</div>
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('countdownGrid').innerHTML = countdownHtml;
+
+            // Achievements
+            const yearsTogether = Math.floor(daysTogether / 365);
+            let achievementsHtml = '';
+            for (let i = 1; i <= 10; i++) {
+                const unlocked = i <= yearsTogether;
+                achievementsHtml += `
+                    <div class="achievement ${unlocked ? 'unlocked' : ''}" title="${i} ${i === 1 ? 'год' : 'лет'} вместе">
+                        ${unlocked ? '🏆' : '🔒'}
+                        <div class="achievement-year">${i} ${i === 1 ? 'год' : i < 5 ? 'года' : 'лет'}</div>
+                    </div>
+                `;
+            }
+            document.getElementById('achievementsContainer').innerHTML = achievementsHtml;
+        }
+
+        // Cards
+        function renderBaseCards() {
+            const html = baseCards.map((card, index) => `
+                <div class="card-item" onclick="sendCard('${card.emoji}', '${card.text}')">
+                    <div class="card-emoji">${card.emoji}</div>
+                    <div class="card-text">${card.text}</div>
+                </div>
+            `).join('');
+            document.getElementById('cardsGrid').innerHTML = html;
+        }
+
+        function uploadCustomCard() {
+            const file = document.getElementById('customCardUpload').files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const customCards = JSON.parse(localStorage.getItem('customCards') || '[]');
+                    customCards.push({ image: e.target.result, date: new Date().toISOString() });
+                    localStorage.setItem('customCards', JSON.stringify(customCards));
+                    renderCustomCards();
+                };
+                reader.readAsDataURL(file);
+            }
+        }
+
+        function renderCustomCards() {
+            const customCards = JSON.parse(localStorage.getItem('customCards') || '[]');
+            const html = customCards.map((card, index) => `
+                <div class="card-item">
+                    <img src="${card.image}" style="width: 100%; height: 100px; object-fit: cover; border-radius: 8px;">
+                    <button class="delete-btn" onclick="deleteCustomCard(${index})">×</button>
+                </div>
+            `).join('');
+            document.getElementById('customCardsGrid').innerHTML = html;
+        }
+
+        function deleteCustomCard(index) {
+            const customCards = JSON.parse(localStorage.getItem('customCards') || '[]');
+            customCards.splice(index, 1);
+            localStorage.setItem('customCards', JSON.stringify(customCards));
+            renderCustomCards();
+        }
+
+        function sendCard(emoji, text) {
+            alert(`Отправлена открытка: ${emoji} ${text}`);
+        }
+
+        // Lists management
+        function addWish() {
+            addListItem('wishes', 'wishInput', '⭐');
+        }
+
+        function addPlan() {
+            const text = document.getElementById('planInput').value.trim();
+            const date = document.getElementById('planDate').value;
+            if (text && date) {
+                const plans = JSON.parse(localStorage.getItem('plans') || '[]');
+                plans.push({ text, date, createdAt: new Date().toISOString() });
+                localStorage.setItem('plans', JSON.stringify(plans));
+                document.getElementById('planInput').value = '';
+                document.getElementById('planDate').value = '';
+                renderList('plans', 'plansList', '📝');
+            }
+        }
+
+        function addPlace() {
+            addListItem('places', 'placeInput', '📍');
+        }
+
+        function addIdea() {
+            addListItem('ideas', 'ideaInput', '💡');
+        }
+
+        function addGoal() {
+            addListItem('goals', 'goalInput', '🎯');
+        }
+
+        function addGuidePlace() {
+            const name = document.getElementById('guideNameInput').value.trim();
+            const desc = document.getElementById('guideDescInput').value.trim();
+            if (name && desc) {
+                const guide = JSON.parse(localStorage.getItem('guide') || '[]');
+                guide.push({ name, desc, createdAt: new Date().toISOString() });
+                localStorage.setItem('guide', JSON.stringify(guide));
+                document.getElementById('guideNameInput').value = '';
+                document.getElementById('guideDescInput').value = '';
+                renderGuide();
+            }
+        }
+
+        function addListItem(key, inputId, emoji) {
+            const input = document.getElementById(inputId);
+            const text = input.value.trim();
+            if (text) {
+                const items = JSON.parse(localStorage.getItem(key) || '[]');
+                items.push({ text, createdAt: new Date().toISOString() });
+                localStorage.setItem(key, JSON.stringify(items));
+                input.value = '';
+                renderList(key, `${key}List`, emoji);
+            }
+        }
+
+        function renderList(key, containerId, emoji) {
+            const items = JSON.parse(localStorage.getItem(key) || '[]');
+            const html = items.map((item, index) => `
+                <div class="list-item">
+                    <div class="list-item-content">
+                        <div class="list-item-text">${emoji} ${item.text}</div>
+                        ${item.date ? `<div class="list-item-date">До: ${new Date(item.date).toLocaleDateString('ru-RU')}</div>` : ''}
+                    </div>
+                    <button class="delete-btn" onclick="deleteListItem('${key}', ${index}, '${containerId}', '${emoji}')">×</button>
+                </div>
+            `).join('');
+            document.getElementById(containerId).innerHTML = html || '<p style="text-align: center; color: var(--color-text-light);">Пока ничего не добавлено</p>';
+        }
+
+        function renderGuide() {
+            const guide = JSON.parse(localStorage.getItem('guide') || '[]');
+            const html = guide.map((item, index) => `
+                <div class="list-item">
+                    <div class="list-item-content">
+                        <div class="list-item-text">🗺️ ${item.name}</div>
+                        <div class="list-item-date">${item.desc}</div>
+                    </div>
+                    <button class="delete-btn" onclick="deleteListItem('guide', ${index}, 'guideList', '')">×</button>
+                </div>
+            `).join('');
+            document.getElementById('guideList').innerHTML = html || '<p style="text-align: center; color: var(--color-text-light);">Пока ничего не добавлено</p>';
+        }
+
+        function deleteListItem(key, index, containerId, emoji) {
+            const items = JSON.parse(localStorage.getItem(key) || '[]');
+            items.splice(index, 1);
+            localStorage.setItem(key, JSON.stringify(items));
+            if (key === 'guide') {
+                renderGuide();
+            } else {
+                renderList(key, containerId, emoji);
+            }
+        }
+
+        function loadAllLists() {
+            renderList('wishes', 'wishesList', '⭐');
+            renderList('plans', 'plansList', '📝');
+            renderList('places', 'placesList', '📍');
+            renderList('ideas', 'ideasList', '💡');
+            renderList('goals', 'goalsList', '🎯');
+            renderGuide();
+            
+            // Add templates to wishes if empty
+            const wishes = JSON.parse(localStorage.getItem('wishes') || '[]');
+            if (wishes.length === 0) {
+                wishesTemplates.forEach(wish => {
+                    wishes.push({ text: wish, createdAt: new Date().toISOString() });
+                });
+                localStorage.setItem('wishes', JSON.stringify(wishes));
+                renderList('wishes', 'wishesList', '⭐');
+            }
+        }
+
+        // Chat
+        function loadChat() {
+            const messages = JSON.parse(localStorage.getItem('chatMessages') || '[]');
+            renderChat(messages);
+        }
+
+        function renderChat(messages) {
+            const html = messages.map(msg => `
+                <div class="chat-message ${msg.sender === currentUser ? 'sent' : 'received'}">
+                    <div>${msg.text}</div>
+                    <div class="chat-message-time">${new Date(msg.timestamp).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}</div>
+                </div>
+            `).join('');
+            document.getElementById('chatMessages').innerHTML = html;
+            document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (text) {
+                const messages = JSON.parse(localStorage.getItem('chatMessages') || '[]');
+                messages.push({
+                    text,
+                    sender: currentUser,
+                    timestamp: new Date().toISOString()
+                });
+                localStorage.setItem('chatMessages', JSON.stringify(messages));
+                input.value = '';
+                renderChat(messages);
+            }
+        }
+
+        document.getElementById('chatInput').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Drawing
+        function initDrawingCanvas() {
+            canvas = document.getElementById('drawingCanvas');
+            ctx = canvas.getContext('2d');
+            canvas.width = canvas.offsetWidth;
+            canvas.height = 500;
+
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+
+            canvas.addEventListener('touchstart', handleTouch);
+            canvas.addEventListener('touchmove', handleTouch);
+            canvas.addEventListener('touchend', stopDrawing);
+        }
+
+        function startDrawing(e) {
+            isDrawing = true;
+            const rect = canvas.getBoundingClientRect();
+            ctx.beginPath();
+            ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            const rect = canvas.getBoundingClientRect();
+            ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+            ctx.strokeStyle = document.getElementById('colorPicker').value;
+            ctx.lineWidth = document.getElementById('brushSize').value;
+            ctx.lineCap = 'round';
+            ctx.stroke();
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+        }
+
+        function handleTouch(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent(e.type === 'touchstart' ? 'mousedown' : e.type === 'touchmove' ? 'mousemove' : 'mouseup', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            canvas.dispatchEvent(mouseEvent);
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function saveDrawing() {
+            const dataUrl = canvas.toDataURL();
+            const drawings = JSON.parse(localStorage.getItem('drawings') || '[]');
+            drawings.push({ image: dataUrl, date: new Date().toISOString() });
+            localStorage.setItem('drawings', JSON.stringify(drawings));
+            loadDrawingGallery();
+            alert('Рисунок сохранен в галерею!');
+        }
+
+        function newDrawing() {
+            if (confirm('Создать новый рисунок? Текущий будет очищен.')) {
+                clearCanvas();
+            }
+        }
+
+        function loadDrawingGallery() {
+            const drawings = JSON.parse(localStorage.getItem('drawings') || '[]');
+            const html = drawings.map((drawing, index) => `
+                <div class="gallery-item">
+                    <img src="${drawing.image}" alt="Drawing ${index + 1}">
+                    <button class="delete-btn" onclick="deleteDrawing(${index})" style="position: absolute; top: 5px; right: 5px; background: white; border-radius: 50%; width: 30px; height: 30px;">×</button>
+                </div>
+            `).join('');
+            document.getElementById('drawingGallery').innerHTML = html || '<p style="text-align: center; color: var(--color-text-light); grid-column: 1 / -1;">Галерея пуста</p>';
+        }
+
+        function deleteDrawing(index) {
+            const drawings = JSON.parse(localStorage.getItem('drawings') || '[]');
+            drawings.splice(index, 1);
+            localStorage.setItem('drawings', JSON.stringify(drawings));
+            loadDrawingGallery();
+        }
+
+        // Media
+        function addMedia(type) {
+            const input = document.getElementById(`${type}Input`);
+            const text = input.value.trim();
+            if (text) {
+                const media = JSON.parse(localStorage.getItem(`media_${type}`) || '[]');
+                media.push({ text, user: currentUser, date: new Date().toISOString() });
+                localStorage.setItem(`media_${type}`, JSON.stringify(media));
+                input.value = '';
+                renderMedia(type);
+            }
+        }
+
+        function renderMedia(type) {
+            const media = JSON.parse(localStorage.getItem(`media_${type}`) || '[]');
+            const icons = { reading: '📖', watching: '📺', listening: '🎵' };
+            const html = media.map((item, index) => `
+                <div class="media-item">
+                    <h4>${icons[type]} ${item.text}</h4>
+                    <div class="media-author">${item.user} • ${new Date(item.date).toLocaleDateString('ru-RU')}</div>
+                    <button class="delete-btn" onclick="deleteMedia('${type}', ${index})">×</button>
+                </div>
+            `).join('');
+            document.getElementById(`${type}List`).innerHTML = html || '<p style="text-align: center; color: var(--color-text-light);">Пока ничего не добавлено</p>';
+        }
+
+        function deleteMedia(type, index) {
+            const media = JSON.parse(localStorage.getItem(`media_${type}`) || '[]');
+            media.splice(index, 1);
+            localStorage.setItem(`media_${type}`, JSON.stringify(media));
+            renderMedia(type);
+        }
+
+        function loadMedia() {
+            renderMedia('reading');
+            renderMedia('watching');
+            renderMedia('listening');
+        }
+
+        // Extras
+        function addTimeCapsule() {
+            const text = document.getElementById('capsuleInput').value.trim();
+            const date = document.getElementById('capsuleDate').value;
+            if (text && date) {
+                const capsules = JSON.parse(localStorage.getItem('timeCapsules') || '[]');
+                capsules.push({ text, openDate: date, createdAt: new Date().toISOString(), opened: false });
+                localStorage.setItem('timeCapsules', JSON.stringify(capsules));
+                document.getElementById('capsuleInput').value = '';
+                document.getElementById('capsuleDate').value = '';
+                renderTimeCapsules();
+            }
+        }
+
+        function renderTimeCapsules() {
+            const capsules = JSON.parse(localStorage.getItem('timeCapsules') || '[]');
+            const now = new Date();
+            const html = capsules.map((capsule, index) => {
+                const openDate = new Date(capsule.openDate);
+                const canOpen = openDate <= now;
+                return `
+                    <div class="list-item">
+                        <div class="list-item-content">
+                            <div class="list-item-text">${canOpen ? '🔓' : '🔒'} ${canOpen || capsule.opened ? capsule.text : 'Капсула откроется ' + openDate.toLocaleDateString('ru-RU')}</div>
+                        </div>
+                        ${canOpen && !capsule.opened ? `<button class="btn btn-small btn-primary" onclick="openCapsule(${index})">Открыть</button>` : ''}
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('capsulesList').innerHTML = html || '<p style="text-align: center; color: var(--color-text-light);">Капсул пока нет</p>';
+        }
+
+        function openCapsule(index) {
+            const capsules = JSON.parse(localStorage.getItem('timeCapsules') || '[]');
+            capsules[index].opened = true;
+            localStorage.setItem('timeCapsules', JSON.stringify(capsules));
+            renderTimeCapsules();
+        }
+
+        function showRandomCompliment() {
+            const compliment = compliments[Math.floor(Math.random() * compliments.length)];
+            document.getElementById('complimentText').textContent = compliment;
+        }
+
+        function saveMood(emoji, mood) {
+            const moods = JSON.parse(localStorage.getItem('moods') || '[]');
+            moods.push({ emoji, mood, user: currentUser, date: new Date().toISOString() });
+            localStorage.setItem('moods', JSON.stringify(moods));
+            renderMoodHistory();
+            alert(`Настроение сохранено: ${emoji} ${mood}`);
+        }
+
+        function renderMoodHistory() {
+            const moods = JSON.parse(localStorage.getItem('moods') || '[]');
+            const recent = moods.slice(-5).reverse();
+            const html = recent.map(m => `
+                <div style="display: flex; justify-content: space-between; padding: 10px; background: var(--color-bg); border-radius: 8px; margin-top: 10px;">
+                    <span>${m.emoji} ${m.mood}</span>
+                    <span style="color: var(--color-text-light); font-size: 0.85em;">${new Date(m.date).toLocaleDateString('ru-RU')}</span>
+                </div>
+            `).join('');
+            document.getElementById('moodHistory').innerHTML = html;
+        }
+
+        function addGratitude() {
+            const text = document.getElementById('gratitudeInput').value.trim();
+            if (text) {
+                const gratitudes = JSON.parse(localStorage.getItem('gratitudes') || '[]');
+                gratitudes.push({ text, user: currentUser, date: new Date().toISOString() });
+                localStorage.setItem('gratitudes', JSON.stringify(gratitudes));
+                document.getElementById('gratitudeInput').value = '';
+                renderGratitudes();
+            }
+        }
+
+        function renderGratitudes() {
+            const gratitudes = JSON.parse(localStorage.getItem('gratitudes') || '[]');
+            const html = gratitudes.map((item, index) => `
+                <div class="list-item">
+                    <div class="list-item-content">
+                        <div class="list-item-text">🙏 ${item.text}</div>
+                        <div class="list-item-date">${item.user} • ${new Date(item.date).toLocaleDateString('ru-RU')}</div>
+                    </div>
+                    <button class="delete-btn" onclick="deleteGratitude(${index})">×</button>
+                </div>
+            `).join('');
+            document.getElementById('gratitudeList').innerHTML = html || '<p style="text-align: center; color: var(--color-text-light);">Пока ничего не добавлено</p>';
+        }
+
+        function deleteGratitude(index) {
+            const gratitudes = JSON.parse(localStorage.getItem('gratitudes') || '[]');
+            gratitudes.splice(index, 1);
+            localStorage.setItem('gratitudes', JSON.stringify(gratitudes));
+            renderGratitudes();
+        }
+
+        function addMusic() {
+            const text = document.getElementById('musicInput').value.trim();
+            if (text) {
+                const music = JSON.parse(localStorage.getItem('music') || '[]');
+                music.push({ text, user: currentUser, date: new Date().toISOString() });
+                localStorage.setItem('music', JSON.stringify(music));
+                document.getElementById('musicInput').value = '';
+                renderMusic();
+            }
+        }
+
+        function renderMusic() {
+            const music = JSON.parse(localStorage.getItem('music') || '[]');
+            const html = music.map((item, index) => `
+                <div class="list-item">
+                    <div class="list-item-content">
+                        <div class="list-item-text">🎵 ${item.text}</div>
+                        <div class="list-item-date">${item.user}</div>
+                    </div>
+                    <button class="delete-btn" onclick="deleteMusic(${index})">×</button>
+                </div>
+            `).join('');
+            document.getElementById('musicList').innerHTML = html || '<p style="text-align: center; color: var(--color-text-light);">Плейлист пуст</p>';
+        }
+
+        function deleteMusic(index) {
+            const music = JSON.parse(localStorage.getItem('music') || '[]');
+            music.splice(index, 1);
+            localStorage.setItem('music', JSON.stringify(music));
+            renderMusic();
+        }
+
+        function loadExtras() {
+            renderTimeCapsules();
+            renderMoodHistory();
+            renderGratitudes();
+            renderMusic();
+        }
+
+        // Quiz
+        let currentQuizIndex = 0;
+        let quizScore = 0;
+
+        function loadQuizQuestion() {
+            if (quizQuestions.length === 0) return;
+            currentQuizIndex = Math.floor(Math.random() * quizQuestions.length);
+            const question = quizQuestions[currentQuizIndex];
+            document.getElementById('quizQuestion').textContent = question.question;
+            const html = question.options.map((option, index) => `
+                <div class="quiz-option" onclick="selectQuizAnswer(${index})">${option}</div>
+            `).join('');
+            document.getElementById('quizOptions').innerHTML = html;
+        }
+
+        function selectQuizAnswer(index) {
+            alert('Ответ записан! Обсудите правильность ответа вместе 😊');
+        }
+
+        // Love signals
+        function sendLoveSignal(emoji) {
+            const x = Math.random() * window.innerWidth;
+            const y = window.innerHeight;
+            const heart = document.createElement('div');
+            heart.className = 'floating-heart';
+            heart.textContent = emoji;
+            heart.style.left = x + 'px';
+            heart.style.top = y + 'px';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 3000);
+        }
+
+        // Tab switching
+        function switchTab(tabName) {
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+
+        // Logout
+        function logout() {
+            if (confirm('Вы уверены, что хотите выйти?')) {
+                document.getElementById('appContainer').style.display = 'none';
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('loginUsername').value = '';
+                document.getElementById('loginPassword').value = '';
+            }
+        }
+    </script>
+</body>
+</html>
