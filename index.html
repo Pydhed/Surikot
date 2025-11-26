@@ -6,20 +6,20 @@
     <title>Love Hub - Сурикат & Кот</title>
     <style>
         :root {
-            --color-primary: #ff6b9d;
-            --color-secondary: #c44569;
-            --color-accent: #ffa07a;
-            --color-bg: #fff5f7;
+            --color-primary: #8B5CF6;
+            --color-secondary: #EC4899;
+            --color-accent: #F472B6;
+            --color-bg: #FAF5FF;
             --color-surface: #ffffff;
-            --color-text: #2d3436;
-            --color-text-light: #636e72;
-            --color-border: #ffe0e9;
-            --color-success: #00b894;
-            --color-warning: #fdcb6e;
-            --color-info: #74b9ff;
-            --shadow-sm: 0 2px 8px rgba(255, 107, 157, 0.1);
-            --shadow-md: 0 4px 16px rgba(255, 107, 157, 0.15);
-            --shadow-lg: 0 8px 24px rgba(255, 107, 157, 0.2);
+            --color-text: #1F2937;
+            --color-text-light: #6B7280;
+            --color-border: #E9D5FF;
+            --color-success: #10B981;
+            --color-warning: #F59E0B;
+            --color-info: #3B82F6;
+            --shadow-sm: 0 1px 3px rgba(139, 92, 246, 0.1);
+            --shadow-md: 0 4px 12px rgba(139, 92, 246, 0.15);
+            --shadow-lg: 0 10px 30px rgba(139, 92, 246, 0.2);
         }
 
         * {
@@ -30,10 +30,29 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: linear-gradient(135deg, #ffeef2 0%, #fff5f7 100%);
+            background: linear-gradient(135deg, #FAF5FF 0%, #FDF4FF 100%);
             color: var(--color-text);
             line-height: 1.6;
             min-height: 100vh;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--color-bg);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--color-primary);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--color-secondary);
         }
 
         /* Login Screen */
@@ -43,89 +62,138 @@
             justify-content: center;
             min-height: 100vh;
             padding: 20px;
-            background: linear-gradient(135deg, #ff6b9d 0%, #c44569 100%);
+            background: linear-gradient(135deg, #8B5CF6 0%, #EC4899 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-screen::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 6s ease-in-out infinite;
+            top: -250px;
+            right: -250px;
+        }
+
+        .login-screen::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+            border-radius: 50%;
+            animation: float 8s ease-in-out infinite;
+            bottom: -200px;
+            left: -200px;
+            animation-delay: 2s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-20px) scale(1.05); }
         }
 
         .login-box {
             background: white;
-            padding: 40px;
-            border-radius: 20px;
-            box-shadow: var(--shadow-lg);
-            max-width: 400px;
+            padding: 50px 40px;
+            border-radius: 24px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            max-width: 420px;
             width: 100%;
             text-align: center;
+            position: relative;
+            z-index: 1;
         }
 
         .login-box h1 {
-            color: var(--color-primary);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 10px;
-            font-size: 2em;
+            font-size: 2.5em;
+            font-weight: 700;
         }
 
         .login-box p {
             color: var(--color-text-light);
-            margin-bottom: 30px;
+            margin-bottom: 35px;
+            font-size: 1.05em;
         }
 
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 24px;
             text-align: left;
         }
 
         .form-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 10px;
             color: var(--color-text);
-            font-weight: 500;
+            font-weight: 600;
+            font-size: 0.95em;
         }
 
         .form-group input {
             width: 100%;
-            padding: 12px;
+            padding: 14px 16px;
             border: 2px solid var(--color-border);
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 16px;
-            transition: border-color 0.3s;
+            transition: all 0.3s;
+            background: var(--color-bg);
         }
 
         .form-group input:focus {
             outline: none;
             border-color: var(--color-primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
         }
 
         .btn {
-            padding: 12px 24px;
+            padding: 14px 28px;
             border: none;
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 16px;
-            font-weight: 500;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.3s;
+            display: inline-block;
         }
 
         .btn-primary {
-            background: var(--color-primary);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
             color: white;
             width: 100%;
-        }
-
-        .btn-primary:hover {
-            background: var(--color-secondary);
-            transform: translateY(-2px);
             box-shadow: var(--shadow-md);
         }
 
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn-primary:active {
+            transform: translateY(0);
+        }
+
         .btn-secondary {
-            background: var(--color-border);
+            background: var(--color-bg);
             color: var(--color-text);
+            border: 2px solid var(--color-border);
         }
 
         .btn-secondary:hover {
-            background: var(--color-accent);
+            background: var(--color-border);
+            border-color: var(--color-primary);
         }
 
         .btn-small {
-            padding: 8px 16px;
+            padding: 10px 20px;
             font-size: 14px;
         }
 
@@ -136,7 +204,7 @@
 
         .app-header {
             background: white;
-            padding: 15px 20px;
+            padding: 16px 24px;
             box-shadow: var(--shadow-sm);
             position: sticky;
             top: 0;
@@ -144,17 +212,18 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
+            border-bottom: 1px solid var(--color-border);
         }
 
         .header-left {
             display: flex;
             align-items: center;
-            gap: 20px;
+            gap: 24px;
         }
 
         .logo {
-            font-size: 1.5em;
-            font-weight: bold;
+            font-size: 1.6em;
+            font-weight: 700;
             background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
@@ -162,7 +231,7 @@
 
         .user-profiles {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             align-items: center;
         }
 
@@ -173,185 +242,234 @@
             border: 3px solid var(--color-primary);
             cursor: pointer;
             object-fit: cover;
-            background: var(--color-border);
+            background: var(--color-bg);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 20px;
+            font-size: 22px;
+            transition: all 0.3s;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .user-avatar:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-md);
         }
 
         .hearts-separator {
-            color: var(--color-primary);
-            font-size: 20px;
+            color: var(--color-secondary);
+            font-size: 22px;
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            25% { transform: scale(1.1); }
+            50% { transform: scale(1); }
         }
 
         .logout-btn {
-            padding: 8px 16px;
+            padding: 10px 20px;
             background: transparent;
             border: 2px solid var(--color-primary);
             color: var(--color-primary);
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
             transition: all 0.3s;
+            font-weight: 600;
+            font-size: 14px;
         }
 
         .logout-btn:hover {
             background: var(--color-primary);
             color: white;
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
         .main-content {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 20px;
+            padding: 30px 20px;
         }
 
         .dashboard {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
             margin-bottom: 30px;
         }
 
         .widget {
             background: white;
-            padding: 25px;
-            border-radius: 15px;
+            padding: 28px;
+            border-radius: 20px;
             box-shadow: var(--shadow-sm);
-            transition: transform 0.3s, box-shadow 0.3s;
+            transition: all 0.3s;
+            border: 1px solid var(--color-border);
         }
 
         .widget:hover {
-            transform: translateY(-5px);
+            transform: translateY(-4px);
             box-shadow: var(--shadow-md);
         }
 
         .widget-title {
-            font-size: 1.2em;
-            font-weight: 600;
-            margin-bottom: 15px;
-            color: var(--color-primary);
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-bottom: 20px;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .counter-large {
-            font-size: 3em;
-            font-weight: bold;
-            color: var(--color-secondary);
+            font-size: 3.5em;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             text-align: center;
-            margin: 20px 0;
+            margin: 24px 0;
         }
 
         .counter-label {
             text-align: center;
             color: var(--color-text-light);
-            font-size: 0.9em;
+            font-size: 0.95em;
+            font-weight: 500;
         }
 
         .countdown-grid {
             display: grid;
-            gap: 15px;
-            margin-top: 15px;
+            gap: 16px;
+            margin-top: 16px;
         }
 
         .countdown-item {
             background: var(--color-bg);
-            padding: 15px;
-            border-radius: 10px;
+            padding: 20px;
+            border-radius: 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border: 1px solid var(--color-border);
+            transition: all 0.3s;
+        }
+
+        .countdown-item:hover {
+            background: white;
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-sm);
         }
 
         .countdown-info h4 {
             color: var(--color-text);
-            margin-bottom: 5px;
+            margin-bottom: 6px;
+            font-weight: 600;
         }
 
         .countdown-info p {
             color: var(--color-text-light);
-            font-size: 0.85em;
+            font-size: 0.9em;
         }
 
         .countdown-number {
-            font-size: 2em;
-            font-weight: bold;
-            color: var(--color-primary);
+            font-size: 2.2em;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
         .progress-bar {
             width: 100%;
-            height: 8px;
+            height: 10px;
             background: var(--color-border);
             border-radius: 10px;
             overflow: hidden;
-            margin-top: 10px;
+            margin-top: 12px;
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--color-primary), var(--color-accent));
+            background: linear-gradient(90deg, var(--color-primary), var(--color-secondary));
             transition: width 0.5s ease;
+            border-radius: 10px;
         }
 
         .achievements {
             display: flex;
-            gap: 15px;
-            margin-top: 20px;
+            gap: 16px;
+            margin-top: 24px;
             flex-wrap: wrap;
+            justify-content: center;
         }
 
         .achievement {
-            width: 80px;
-            height: 80px;
+            width: 90px;
+            height: 90px;
             border-radius: 50%;
             background: var(--color-bg);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 2em;
+            font-size: 2.5em;
             border: 3px solid var(--color-border);
             position: relative;
             cursor: pointer;
-            transition: transform 0.3s;
+            transition: all 0.3s;
         }
 
         .achievement:hover {
-            transform: scale(1.1);
+            transform: scale(1.15) rotate(5deg);
         }
 
         .achievement.unlocked {
             border-color: var(--color-primary);
-            background: white;
+            background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), rgba(236, 72, 153, 0.1));
+            box-shadow: var(--shadow-md);
         }
 
         .achievement-year {
             position: absolute;
-            bottom: -25px;
-            font-size: 0.4em;
+            bottom: -28px;
+            font-size: 0.35em;
             color: var(--color-text-light);
+            font-weight: 600;
         }
 
         /* Navigation */
         .nav-tabs {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             margin-bottom: 30px;
-            flex-wrap: wrap;
+            flex-wrap: nowrap;
             background: white;
-            padding: 15px;
-            border-radius: 15px;
+            padding: 16px;
+            border-radius: 20px;
             box-shadow: var(--shadow-sm);
+            overflow-x: auto;
+            overflow-y: hidden;
+            border: 1px solid var(--color-border);
+        }
+
+        .nav-tabs::-webkit-scrollbar {
+            height: 6px;
         }
 
         .nav-tab {
-            padding: 10px 20px;
+            padding: 12px 24px;
             background: transparent;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s;
             color: var(--color-text);
             font-size: 15px;
+            font-weight: 500;
+            white-space: nowrap;
+            flex-shrink: 0;
         }
 
         .nav-tab:hover {
@@ -359,8 +477,9 @@
         }
 
         .nav-tab.active {
-            background: var(--color-primary);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
             color: white;
+            box-shadow: var(--shadow-sm);
         }
 
         .tab-content {
@@ -369,89 +488,119 @@
 
         .tab-content.active {
             display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         /* Cards Section */
         .cards-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            gap: 15px;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 16px;
         }
 
         .card-item {
             background: white;
-            padding: 20px;
-            border-radius: 12px;
+            padding: 24px;
+            border-radius: 16px;
             text-align: center;
             cursor: pointer;
             transition: all 0.3s;
             border: 2px solid var(--color-border);
+            position: relative;
         }
 
         .card-item:hover {
-            transform: scale(1.05);
+            transform: translateY(-4px);
             border-color: var(--color-primary);
             box-shadow: var(--shadow-md);
         }
 
         .card-emoji {
-            font-size: 3em;
-            margin-bottom: 10px;
+            font-size: 3.5em;
+            margin-bottom: 12px;
         }
 
         .card-text {
             color: var(--color-text);
-            font-size: 0.9em;
+            font-size: 0.95em;
+            font-weight: 500;
         }
 
         /* List Items */
         .list-container {
             background: white;
-            padding: 25px;
-            border-radius: 15px;
+            padding: 32px;
+            border-radius: 20px;
             box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+        }
+
+        .list-container h2 {
+            margin-bottom: 24px;
+            color: var(--color-text);
+            font-weight: 700;
+        }
+
+        .list-container h3 {
+            margin-bottom: 16px;
+            color: var(--color-text);
+            font-weight: 600;
         }
 
         .add-item-form {
             display: flex;
-            gap: 10px;
-            margin-bottom: 20px;
+            gap: 12px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
         }
 
         .add-item-form input,
         .add-item-form textarea {
             flex: 1;
-            padding: 12px;
+            min-width: 200px;
+            padding: 14px 16px;
             border: 2px solid var(--color-border);
-            border-radius: 10px;
+            border-radius: 12px;
             font-size: 15px;
             font-family: inherit;
+            transition: all 0.3s;
+            background: var(--color-bg);
         }
 
         .add-item-form input:focus,
         .add-item-form textarea:focus {
             outline: none;
             border-color: var(--color-primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
         }
 
         .list-items {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
         }
 
         .list-item {
             background: var(--color-bg);
-            padding: 15px;
-            border-radius: 10px;
+            padding: 18px 20px;
+            border-radius: 12px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             transition: all 0.3s;
+            border: 1px solid var(--color-border);
         }
 
         .list-item:hover {
-            background: var(--color-border);
+            background: white;
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-sm);
         }
 
         .list-item-content {
@@ -460,12 +609,13 @@
 
         .list-item-text {
             color: var(--color-text);
-            margin-bottom: 5px;
+            margin-bottom: 6px;
+            font-weight: 500;
         }
 
         .list-item-date {
             color: var(--color-text-light);
-            font-size: 0.85em;
+            font-size: 0.9em;
         }
 
         .delete-btn {
@@ -473,155 +623,202 @@
             border: none;
             color: var(--color-secondary);
             cursor: pointer;
-            font-size: 1.2em;
-            padding: 5px 10px;
-            transition: transform 0.2s;
+            font-size: 1.4em;
+            padding: 8px 12px;
+            transition: all 0.2s;
+            border-radius: 8px;
         }
 
         .delete-btn:hover {
+            background: rgba(236, 72, 153, 0.1);
             transform: scale(1.2);
         }
 
         /* Chat */
         .chat-container {
             background: white;
-            border-radius: 15px;
+            border-radius: 20px;
             box-shadow: var(--shadow-sm);
             height: 600px;
             display: flex;
             flex-direction: column;
+            border: 1px solid var(--color-border);
+            overflow: hidden;
         }
 
         .chat-messages {
             flex: 1;
-            padding: 20px;
+            padding: 24px;
             overflow-y: auto;
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 16px;
+            background: var(--color-bg);
         }
 
         .chat-message {
-            max-width: 70%;
-            padding: 12px 16px;
+            max-width: 75%;
+            padding: 14px 18px;
             border-radius: 18px;
             word-wrap: break-word;
+            animation: messageSlide 0.3s ease;
+        }
+
+        @keyframes messageSlide {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .chat-message.sent {
             align-self: flex-end;
-            background: var(--color-primary);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
             color: white;
-            border-bottom-right-radius: 5px;
+            border-bottom-right-radius: 6px;
         }
 
         .chat-message.received {
             align-self: flex-start;
-            background: var(--color-bg);
+            background: white;
             color: var(--color-text);
-            border-bottom-left-radius: 5px;
+            border-bottom-left-radius: 6px;
+            border: 1px solid var(--color-border);
         }
 
         .chat-message-time {
             font-size: 0.75em;
-            opacity: 0.7;
-            margin-top: 5px;
+            opacity: 0.8;
+            margin-top: 6px;
         }
 
         .chat-input-area {
-            padding: 15px;
+            padding: 20px;
             border-top: 2px solid var(--color-border);
             display: flex;
-            gap: 10px;
+            gap: 12px;
+            background: white;
         }
 
         .chat-input-area input {
             flex: 1;
-            padding: 12px;
+            padding: 14px 20px;
             border: 2px solid var(--color-border);
             border-radius: 25px;
             font-size: 15px;
+            background: var(--color-bg);
+            transition: all 0.3s;
         }
 
         .chat-input-area input:focus {
             outline: none;
             border-color: var(--color-primary);
+            background: white;
+            box-shadow: 0 0 0 4px rgba(139, 92, 246, 0.1);
         }
 
         .send-btn {
-            width: 50px;
-            height: 50px;
+            width: 54px;
+            height: 54px;
             border-radius: 50%;
-            background: var(--color-primary);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
             color: white;
             border: none;
             cursor: pointer;
             font-size: 1.5em;
             transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow-sm);
         }
 
         .send-btn:hover {
-            background: var(--color-secondary);
-            transform: scale(1.1);
+            transform: scale(1.1) rotate(15deg);
+            box-shadow: var(--shadow-md);
         }
 
         /* Drawing Board */
         .drawing-container {
             background: white;
-            padding: 20px;
-            border-radius: 15px;
+            padding: 28px;
+            border-radius: 20px;
             box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+        }
+
+        .drawing-container h2 {
+            margin-bottom: 24px;
+            color: var(--color-text);
+            font-weight: 700;
+        }
+
+        .drawing-container h3 {
+            margin-bottom: 16px;
+            color: var(--color-text);
+            font-weight: 600;
         }
 
         .drawing-tools {
             display: flex;
-            gap: 10px;
-            margin-bottom: 15px;
+            gap: 12px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
             align-items: center;
         }
 
         .color-picker {
-            width: 50px;
-            height: 40px;
+            width: 54px;
+            height: 44px;
             border: 2px solid var(--color-border);
-            border-radius: 8px;
+            border-radius: 10px;
             cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .color-picker:hover {
+            transform: scale(1.1);
+            box-shadow: var(--shadow-sm);
         }
 
         .brush-size {
-            padding: 8px 12px;
+            padding: 10px 14px;
             border: 2px solid var(--color-border);
-            border-radius: 8px;
+            border-radius: 10px;
+            background: var(--color-bg);
         }
 
         #drawingCanvas {
             border: 2px solid var(--color-border);
-            border-radius: 10px;
+            border-radius: 16px;
             cursor: crosshair;
             display: block;
             width: 100%;
-            max-width: 800px;
+            max-width: 900px;
             height: 500px;
+            background: white;
+            box-shadow: var(--shadow-sm);
         }
 
         .drawing-gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 15px;
-            margin-top: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
         }
 
         .gallery-item {
-            border-radius: 10px;
+            border-radius: 16px;
             overflow: hidden;
             box-shadow: var(--shadow-sm);
             cursor: pointer;
-            transition: transform 0.3s;
+            transition: all 0.3s;
+            position: relative;
+            border: 2px solid var(--color-border);
         }
 
         .gallery-item:hover {
             transform: scale(1.05);
+            box-shadow: var(--shadow-md);
+            border-color: var(--color-primary);
         }
 
         .gallery-item img {
@@ -633,20 +830,20 @@
         /* Love Signals */
         .love-signals {
             position: fixed;
-            bottom: 20px;
-            right: 20px;
+            bottom: 24px;
+            right: 24px;
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
             z-index: 99;
         }
 
         .love-signal-btn {
-            width: 60px;
-            height: 60px;
+            width: 64px;
+            height: 64px;
             border-radius: 50%;
             border: none;
-            background: var(--color-primary);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
             color: white;
             font-size: 2em;
             cursor: pointer;
@@ -655,13 +852,13 @@
         }
 
         .love-signal-btn:hover {
-            transform: scale(1.1);
+            transform: scale(1.15) rotate(15deg);
             box-shadow: var(--shadow-lg);
         }
 
         .floating-heart {
             position: fixed;
-            font-size: 2em;
+            font-size: 2.5em;
             pointer-events: none;
             animation: floatUp 3s ease-out forwards;
             z-index: 9999;
@@ -670,11 +867,11 @@
         @keyframes floatUp {
             0% {
                 opacity: 1;
-                transform: translateY(0) scale(1);
+                transform: translateY(0) scale(1) rotate(0deg);
             }
             100% {
                 opacity: 0;
-                transform: translateY(-200px) scale(1.5);
+                transform: translateY(-250px) scale(1.8) rotate(20deg);
             }
         }
 
@@ -686,10 +883,11 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.6);
             z-index: 1000;
             align-items: center;
             justify-content: center;
+            backdrop-filter: blur(4px);
         }
 
         .modal.active {
@@ -698,32 +896,55 @@
 
         .modal-content {
             background: white;
-            padding: 30px;
-            border-radius: 20px;
-            max-width: 500px;
+            padding: 36px;
+            border-radius: 24px;
+            max-width: 520px;
             width: 90%;
             max-height: 90vh;
             overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            animation: modalSlide 0.3s ease;
+        }
+
+        @keyframes modalSlide {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .modal-title {
-            font-size: 1.5em;
-            color: var(--color-primary);
+            font-size: 1.6em;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: 700;
         }
 
         .close-modal {
             background: transparent;
             border: none;
-            font-size: 1.5em;
+            font-size: 2em;
             cursor: pointer;
             color: var(--color-text-light);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s;
+        }
+
+        .close-modal:hover {
+            background: var(--color-bg);
+            color: var(--color-secondary);
+            transform: rotate(90deg);
         }
 
         .avatar-upload {
@@ -731,31 +952,35 @@
         }
 
         .avatar-preview {
-            width: 150px;
-            height: 150px;
+            width: 160px;
+            height: 160px;
             border-radius: 50%;
-            margin: 20px auto;
+            margin: 24px auto;
             border: 4px solid var(--color-primary);
             object-fit: cover;
             background: var(--color-bg);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 4em;
+            font-size: 5em;
+            box-shadow: var(--shadow-md);
         }
 
         .file-input-label {
             display: inline-block;
-            padding: 10px 20px;
-            background: var(--color-primary);
+            padding: 12px 28px;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
             color: white;
-            border-radius: 10px;
+            border-radius: 12px;
             cursor: pointer;
             transition: all 0.3s;
+            font-weight: 600;
+            box-shadow: var(--shadow-sm);
         }
 
         .file-input-label:hover {
-            background: var(--color-secondary);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
         }
 
         input[type="file"] {
@@ -765,70 +990,99 @@
         /* Media Section */
         .media-grid {
             display: grid;
-            gap: 15px;
+            gap: 16px;
+            margin-top: 20px;
         }
 
         .media-item {
             background: var(--color-bg);
-            padding: 15px;
-            border-radius: 10px;
+            padding: 18px;
+            border-radius: 12px;
+            border: 1px solid var(--color-border);
+            transition: all 0.3s;
+            position: relative;
+        }
+
+        .media-item:hover {
+            background: white;
+            border-color: var(--color-primary);
+            box-shadow: var(--shadow-sm);
         }
 
         .media-item h4 {
-            color: var(--color-primary);
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
             margin-bottom: 10px;
+            font-weight: 600;
         }
 
         .media-content {
             color: var(--color-text);
-            margin-bottom: 5px;
+            margin-bottom: 6px;
+            font-weight: 500;
         }
 
         .media-author {
             color: var(--color-text-light);
-            font-size: 0.85em;
+            font-size: 0.9em;
         }
 
         /* Quiz */
         .quiz-container {
             background: white;
-            padding: 30px;
-            border-radius: 15px;
+            padding: 36px;
+            border-radius: 20px;
             box-shadow: var(--shadow-sm);
+            border: 1px solid var(--color-border);
+        }
+
+        .quiz-container h2 {
+            margin-bottom: 24px;
+            text-align: center;
+            color: var(--color-text);
+            font-weight: 700;
         }
 
         .quiz-question {
-            font-size: 1.3em;
+            font-size: 1.4em;
             color: var(--color-text);
-            margin-bottom: 20px;
+            margin-bottom: 28px;
             text-align: center;
+            font-weight: 600;
         }
 
         .quiz-options {
             display: grid;
-            gap: 10px;
+            gap: 12px;
         }
 
         .quiz-option {
-            padding: 15px;
+            padding: 18px 24px;
             background: var(--color-bg);
             border: 2px solid var(--color-border);
-            border-radius: 10px;
+            border-radius: 14px;
             cursor: pointer;
             transition: all 0.3s;
             text-align: center;
+            font-weight: 500;
         }
 
         .quiz-option:hover {
-            background: var(--color-border);
+            background: white;
             border-color: var(--color-primary);
+            transform: translateX(4px);
+            box-shadow: var(--shadow-sm);
         }
 
         .quiz-score {
             text-align: center;
-            font-size: 2em;
-            color: var(--color-primary);
-            margin-top: 20px;
+            font-size: 2.2em;
+            background: linear-gradient(135deg, var(--color-primary), var(--color-secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-top: 24px;
+            font-weight: 700;
         }
 
         /* Responsive */
@@ -840,17 +1094,25 @@
             .nav-tabs {
                 overflow-x: auto;
                 white-space: nowrap;
+                -webkit-overflow-scrolling: touch;
             }
 
             .user-profiles {
-                flex-direction: column;
-                gap: 5px;
+                gap: 8px;
+            }
+
+            .user-avatar {
+                width: 44px;
+                height: 44px;
+                font-size: 18px;
             }
 
             .header-left {
-                flex-direction: column;
-                gap: 10px;
-                align-items: flex-start;
+                gap: 16px;
+            }
+
+            .logo {
+                font-size: 1.3em;
             }
 
             .chat-message {
@@ -858,7 +1120,58 @@
             }
 
             #drawingCanvas {
-                height: 300px;
+                height: 350px;
+            }
+
+            .main-content {
+                padding: 20px 16px;
+            }
+
+            .widget {
+                padding: 24px;
+            }
+
+            .list-container {
+                padding: 24px;
+            }
+
+            .cards-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+
+            .love-signals {
+                bottom: 16px;
+                right: 16px;
+            }
+
+            .love-signal-btn {
+                width: 56px;
+                height: 56px;
+                font-size: 1.8em;
+            }
+
+            .login-box {
+                padding: 36px 28px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .counter-large {
+                font-size: 2.8em;
+            }
+
+            .countdown-number {
+                font-size: 1.8em;
+            }
+
+            .achievement {
+                width: 75px;
+                height: 75px;
+                font-size: 2em;
+            }
+
+            .cards-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
             }
         }
     </style>
@@ -942,10 +1255,10 @@
             <!-- Tab Contents -->
             <div id="cardsTab" class="tab-content active">
                 <div class="list-container">
-                    <h2 style="margin-bottom: 20px;">💌 Виртуальные открытки</h2>
+                    <h2>💌 Виртуальные открытки</h2>
                     <div class="cards-grid" id="cardsGrid"></div>
-                    <div style="margin-top: 30px;">
-                        <h3 style="margin-bottom: 15px;">Отправить свою открытку</h3>
+                    <div style="margin-top: 36px;">
+                        <h3>Отправить свою открытку</h3>
                         <div class="add-item-form">
                             <input type="file" id="customCardUpload" accept="image/*" onchange="uploadCustomCard()">
                             <label for="customCardUpload" class="file-input-label">Выбрать картинку</label>
@@ -957,7 +1270,7 @@
 
             <div id="wishesTab" class="tab-content">
                 <div class="list-container">
-                    <h2 style="margin-bottom: 20px;">⭐ Совместный список желаний</h2>
+                    <h2>⭐ Совместный список желаний</h2>
                     <div class="add-item-form">
                         <input type="text" id="wishInput" placeholder="Введите желание...">
                         <button class="btn btn-primary btn-small" onclick="addWish()">Добавить</button>
@@ -968,7 +1281,7 @@
 
             <div id="plansTab" class="tab-content">
                 <div class="list-container">
-                    <h2 style="margin-bottom: 20px;">📝 Планы и идеи</h2>
+                    <h2>📝 Планы и идеи</h2>
                     <div class="add-item-form" style="flex-direction: column;">
                         <textarea id="planInput" placeholder="Опишите план..." rows="3"></textarea>
                         <input type="date" id="planDate">
@@ -980,7 +1293,7 @@
 
             <div id="placesTab" class="tab-content">
                 <div class="list-container">
-                    <h2 style="margin-bottom: 20px;">📍 Места, куда хотим сходить</h2>
+                    <h2>📍 Места, куда хотим сходить</h2>
                     <div class="add-item-form">
                         <input type="text" id="placeInput" placeholder="Название места...">
                         <button class="btn btn-primary btn-small" onclick="addPlace()">Добавить</button>
@@ -991,7 +1304,7 @@
 
             <div id="ideasTab" class="tab-content">
                 <div class="list-container">
-                    <h2 style="margin-bottom: 20px;">💡 Идеи для общих дел</h2>
+                    <h2>💡 Идеи для общих дел</h2>
                     <div class="add-item-form">
                         <input type="text" id="ideaInput" placeholder="Ваша идея...">
                         <button class="btn btn-primary btn-small" onclick="addIdea()">Добавить</button>
@@ -1002,7 +1315,7 @@
 
             <div id="goalsTab" class="tab-content">
                 <div class="list-container">
-                    <h2 style="margin-bottom: 20px;">🎯 Совместные цели и мечты</h2>
+                    <h2>🎯 Совместные цели и мечты</h2>
                     <div class="add-item-form">
                         <input type="text" id="goalInput" placeholder="Наша цель...">
                         <button class="btn btn-primary btn-small" onclick="addGoal()">Добавить</button>
@@ -1013,7 +1326,7 @@
 
             <div id="guideTab" class="tab-content">
                 <div class="list-container">
-                    <h2 style="margin-bottom: 20px;">🗺️ Путеводитель по любимым местам</h2>
+                    <h2>🗺️ Путеводитель по любимым местам</h2>
                     <div class="add-item-form" style="flex-direction: column;">
                         <input type="text" id="guideNameInput" placeholder="Название места...">
                         <textarea id="guideDescInput" placeholder="Описание, что здесь особенного..." rows="3"></textarea>
@@ -1027,7 +1340,7 @@
                 <div class="chat-container">
                     <div class="chat-messages" id="chatMessages"></div>
                     <div class="chat-input-area">
-                        <input type="text" id="chatInput" placeholder="Напишите сообщение...">
+                        <input type="text" id="chatInput" placeholder="Напишите сообщение..." onkeypress="if(event.key==='Enter') sendMessage()">
                         <button class="send-btn" onclick="sendMessage()">➤</button>
                     </div>
                 </div>
@@ -1035,39 +1348,39 @@
 
             <div id="drawingTab" class="tab-content">
                 <div class="drawing-container">
-                    <h2 style="margin-bottom: 20px;">🎨 Совместная доска для рисования</h2>
+                    <h2>🎨 Совместная доска для рисования</h2>
                     <div class="drawing-tools">
-                        <input type="color" id="colorPicker" class="color-picker" value="#ff6b9d">
+                        <input type="color" id="colorPicker" class="color-picker" value="#8B5CF6">
                         <input type="range" id="brushSize" class="brush-size" min="1" max="20" value="3">
                         <button class="btn btn-secondary btn-small" onclick="clearCanvas()">Очистить</button>
                         <button class="btn btn-primary btn-small" onclick="saveDrawing()">Сохранить в галерею</button>
                         <button class="btn btn-secondary btn-small" onclick="newDrawing()">Новый рисунок</button>
                     </div>
                     <canvas id="drawingCanvas"></canvas>
-                    <h3 style="margin-top: 30px; margin-bottom: 15px;">Галерея рисунков</h3>
+                    <h3 style="margin-top: 36px;">Галерея рисунков</h3>
                     <div class="drawing-gallery" id="drawingGallery"></div>
                 </div>
             </div>
 
             <div id="mediaTab" class="tab-content">
                 <div class="list-container">
-                    <h2 style="margin-bottom: 20px;">📚 Я сейчас читаю/смотрю/слушаю</h2>
+                    <h2>📚 Я сейчас читаю/смотрю/слушаю</h2>
                     
-                    <h3 style="margin-top: 20px; margin-bottom: 10px;">📖 Читаю</h3>
+                    <h3 style="margin-top: 24px;">📖 Читаю</h3>
                     <div class="add-item-form">
                         <input type="text" id="readingInput" placeholder="Название книги/автор...">
                         <button class="btn btn-primary btn-small" onclick="addMedia('reading')">Добавить</button>
                     </div>
                     <div class="media-grid" id="readingList"></div>
 
-                    <h3 style="margin-top: 30px; margin-bottom: 10px;">📺 Смотрю</h3>
+                    <h3 style="margin-top: 36px;">📺 Смотрю</h3>
                     <div class="add-item-form">
                         <input type="text" id="watchingInput" placeholder="Название фильма/сериала...">
                         <button class="btn btn-primary btn-small" onclick="addMedia('watching')">Добавить</button>
                     </div>
                     <div class="media-grid" id="watchingList"></div>
 
-                    <h3 style="margin-top: 30px; margin-bottom: 10px;">🎵 Слушаю</h3>
+                    <h3 style="margin-top: 36px;">🎵 Слушаю</h3>
                     <div class="add-item-form">
                         <input type="text" id="listeningInput" placeholder="Исполнитель/трек...">
                         <button class="btn btn-primary btn-small" onclick="addMedia('listening')">Добавить</button>
@@ -1080,7 +1393,7 @@
                 <div class="dashboard">
                     <div class="widget">
                         <div class="widget-title">⏰ Капсула времени</div>
-                        <p style="margin-bottom: 15px; color: var(--color-text-light);">Запишите послание, которое откроется в будущем</p>
+                        <p style="margin-bottom: 20px; color: var(--color-text-light);">Запишите послание, которое откроется в будущем</p>
                         <div class="add-item-form" style="flex-direction: column;">
                             <textarea id="capsuleInput" placeholder="Ваше послание..." rows="3"></textarea>
                             <input type="date" id="capsuleDate">
@@ -1091,14 +1404,14 @@
 
                     <div class="widget">
                         <div class="widget-title">💝 Банк комплиментов</div>
-                        <p style="margin-bottom: 15px; color: var(--color-text-light);">Случайный комплимент для любимого человека</p>
+                        <p style="margin-bottom: 20px; color: var(--color-text-light);">Случайный комплимент для любимого человека</p>
                         <button class="btn btn-primary" onclick="showRandomCompliment()">Получить комплимент</button>
-                        <p id="complimentText" style="margin-top: 20px; font-size: 1.1em; text-align: center; color: var(--color-primary);"></p>
+                        <p id="complimentText" style="margin-top: 24px; font-size: 1.15em; text-align: center; font-weight: 500; background: linear-gradient(135deg, var(--color-primary), var(--color-secondary)); -webkit-background-clip: text; -webkit-text-fill-color: transparent;"></p>
                     </div>
 
                     <div class="widget">
                         <div class="widget-title">😊 Mood Tracker</div>
-                        <p style="margin-bottom: 15px; color: var(--color-text-light);">Как вы себя чувствуете сегодня?</p>
+                        <p style="margin-bottom: 20px; color: var(--color-text-light);">Как вы себя чувствуете сегодня?</p>
                         <div class="cards-grid">
                             <div class="card-item" onclick="saveMood('😊', 'Отлично')">
                                 <div class="card-emoji">😊</div>
@@ -1122,7 +1435,7 @@
 
                     <div class="widget">
                         <div class="widget-title">🙏 Книга благодарностей</div>
-                        <p style="margin-bottom: 15px; color: var(--color-text-light);">За что вы благодарны сегодня?</p>
+                        <p style="margin-bottom: 20px; color: var(--color-text-light);">За что вы благодарны сегодня?</p>
                         <div class="add-item-form" style="flex-direction: column;">
                             <textarea id="gratitudeInput" placeholder="Я благодарен за..." rows="3"></textarea>
                             <button class="btn btn-primary btn-small" onclick="addGratitude()">Добавить</button>
@@ -1132,7 +1445,7 @@
 
                     <div class="widget">
                         <div class="widget-title">🎵 Наш плейлист</div>
-                        <p style="margin-bottom: 15px; color: var(--color-text-light);">Любимые песни</p>
+                        <p style="margin-bottom: 20px; color: var(--color-text-light);">Любимые песни</p>
                         <div class="add-item-form">
                             <input type="text" id="musicInput" placeholder="Название - Исполнитель">
                             <button class="btn btn-primary btn-small" onclick="addMusic()">Добавить</button>
@@ -1144,11 +1457,11 @@
 
             <div id="quizTab" class="tab-content">
                 <div class="quiz-container">
-                    <h2 style="margin-bottom: 20px; text-align: center;">🎮 Викторина для пар</h2>
+                    <h2>🎮 Викторина для пар</h2>
                     <div class="quiz-question" id="quizQuestion"></div>
                     <div class="quiz-options" id="quizOptions"></div>
                     <div class="quiz-score" id="quizScore"></div>
-                    <div style="text-align: center; margin-top: 20px;">
+                    <div style="text-align: center; margin-top: 24px;">
                         <button class="btn btn-primary" onclick="loadQuizQuestion()">Следующий вопрос</button>
                     </div>
                 </div>
@@ -1158,8 +1471,8 @@
         <!-- Love Signals -->
         <div class="love-signals">
             <button class="love-signal-btn" onclick="sendLoveSignal('❤️')" title="Отправить сердечко">❤️</button>
-            <button class="love-signal-btn" onclick="sendLoveSignal('💕')" title="Отправить поцелуй">💋</button>
-            <button class="love-signal-btn" onclick="sendLoveSignal('🥰')" title="Обнять">🤗</button>
+            <button class="love-signal-btn" onclick="sendLoveSignal('💋')" title="Отправить поцелуй">💋</button>
+            <button class="love-signal-btn" onclick="sendLoveSignal('🤗')" title="Обнять">🤗</button>
         </div>
     </div>
 
@@ -1179,7 +1492,22 @@
     </div>
 
     <script>
+        // ========================================
+        // TELEGRAM CONFIGURATION
+        // ========================================
+        // ВАЖНО: Настройте эти параметры после создания бота!
+        const TELEGRAM_CONFIG = {
+            enabled: false, // Измените на true после настройки
+            apiUrl: 'https://your-vercel-app.vercel.app/api/telegram', // ЗАМЕНИТЕ на ваш URL
+            chatIds: {
+                surikat: 0, // ЗАМЕНИТЕ на Chat ID Суриката
+                kot: 0      // ЗАМЕНИТЕ на Chat ID Кота
+            }
+        };
+
+        // ========================================
         // Constants
+        // ========================================
         const MEETING_DATE = new Date('2024-06-24');
         const CREDENTIALS = { username: 'Surikat', password: 'Chelovek' };
         const BIRTHDAYS = {
@@ -1187,13 +1515,51 @@
             kot: { month: 3, day: 18, name: 'День рождения Кота' }
         };
 
+        // ========================================
         // State
+        // ========================================
         let currentUser = null;
         let currentAvatarTarget = null;
         let isDrawing = false;
         let canvas, ctx;
 
-        // Base cards
+        // ========================================
+        // Telegram Notification Function
+        // ========================================
+        async function sendTelegramNotification(message, recipient = 'both') {
+            if (!TELEGRAM_CONFIG.enabled) {
+                console.log('Telegram notifications disabled');
+                return;
+            }
+
+            const recipients = recipient === 'both' 
+                ? ['surikat', 'kot'] 
+                : [recipient];
+
+            for (const user of recipients) {
+                const chatId = TELEGRAM_CONFIG.chatIds[user];
+                if (!chatId) continue;
+
+                try {
+                    await fetch(TELEGRAM_CONFIG.apiUrl, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                            chatId: chatId,
+                            message: message
+                        })
+                    });
+                } catch (error) {
+                    console.error('Telegram notification error:', error);
+                }
+            }
+        }
+
+        // ========================================
+        // Base Data
+        // ========================================
         const baseCards = [
             { emoji: '❤️', text: 'Я тебя люблю' },
             { emoji: '🥰', text: 'Ты самый лучший' },
@@ -1209,7 +1575,6 @@
             { emoji: '💪', text: 'Я верю в тебя' }
         ];
 
-        // Wishes templates
         const wishesTemplates = [
             'Съездить в путешествие вместе',
             'Научиться готовить новое блюдо',
@@ -1219,7 +1584,6 @@
             'Отпраздновать годовщину особенно'
         ];
 
-        // Compliments bank
         const compliments = [
             'Ты делаешь мою жизнь ярче каждый день',
             'С тобой я чувствую себя самым счастливым человеком',
@@ -1233,7 +1597,6 @@
             'Я люблю тебя больше, чем вчера, но меньше, чем завтра'
         ];
 
-        // Quiz questions
         const quizQuestions = [
             {
                 question: 'Какой фильм вы смотрели на первом свидании?',
@@ -1257,7 +1620,9 @@
             }
         ];
 
+        // ========================================
         // Login
+        // ========================================
         document.getElementById('loginForm').addEventListener('submit', (e) => {
             e.preventDefault();
             const username = document.getElementById('loginUsername').value;
@@ -1273,7 +1638,9 @@
             }
         });
 
-        // Initialize app
+        // ========================================
+        // Initialize App
+        // ========================================
         function initializeApp() {
             loadAvatars();
             updateCounters();
@@ -1287,9 +1654,31 @@
             loadExtras();
             loadQuizQuestion();
             setInterval(updateCounters, 60000);
+            checkBirthdays();
         }
 
+        // ========================================
+        // Birthday Notifications
+        // ========================================
+        function checkBirthdays() {
+            const today = new Date();
+            const todayStr = `${today.getMonth() + 1}-${today.getDate()}`;
+            
+            Object.entries(BIRTHDAYS).forEach(([user, data]) => {
+                const birthdayStr = `${data.month}-${data.day}`;
+                if (todayStr === birthdayStr) {
+                    const lastNotified = localStorage.getItem(`birthday_notified_${user}_${today.getFullYear()}`);
+                    if (!lastNotified) {
+                        sendTelegramNotification(`🎂 Сегодня ${data.name}! Не забудьте поздравить! 🎉`, 'both');
+                        localStorage.setItem(`birthday_notified_${user}_${today.getFullYear()}`, 'true');
+                    }
+                }
+            });
+        }
+
+        // ========================================
         // Avatars
+        // ========================================
         function loadAvatars() {
             const surikatAvatar = localStorage.getItem('surikatAvatar');
             const kotAvatar = localStorage.getItem('kotAvatar');
@@ -1332,17 +1721,17 @@
             }
         }
 
-        // Counters
+        // ========================================
+        // Counters & Achievements
+        // ========================================
         function updateCounters() {
             const now = new Date();
             const daysTogether = Math.floor((now - MEETING_DATE) / (1000 * 60 * 60 * 24));
             document.getElementById('daysCounter').textContent = daysTogether;
 
-            // Countdown
             const events = [];
             const currentYear = now.getFullYear();
             
-            // Birthdays
             Object.entries(BIRTHDAYS).forEach(([key, data]) => {
                 let eventDate = new Date(currentYear, data.month - 1, data.day);
                 if (eventDate < now) {
@@ -1352,7 +1741,6 @@
                 events.push({ name: data.name, date: eventDate, daysLeft });
             });
 
-            // Anniversary
             let anniversaryDate = new Date(currentYear, MEETING_DATE.getMonth(), MEETING_DATE.getDate());
             if (anniversaryDate < now) {
                 anniversaryDate = new Date(currentYear + 1, MEETING_DATE.getMonth(), MEETING_DATE.getDate());
@@ -1362,7 +1750,6 @@
 
             events.sort((a, b) => a.daysLeft - b.daysLeft);
 
-            // Next event
             if (events.length > 0) {
                 const nextEvent = events[0];
                 document.getElementById('nextEvent').innerHTML = `
@@ -1376,7 +1763,6 @@
                 `;
             }
 
-            // All countdowns
             const countdownHtml = events.map(event => {
                 const progress = Math.max(0, 100 - (event.daysLeft / 365 * 100));
                 return `
@@ -1396,7 +1782,6 @@
             }).join('');
             document.getElementById('countdownGrid').innerHTML = countdownHtml;
 
-            // Achievements
             const yearsTogether = Math.floor(daysTogether / 365);
             let achievementsHtml = '';
             for (let i = 1; i <= 10; i++) {
@@ -1411,7 +1796,9 @@
             document.getElementById('achievementsContainer').innerHTML = achievementsHtml;
         }
 
+        // ========================================
         // Cards
+        // ========================================
         function renderBaseCards() {
             const html = baseCards.map((card, index) => `
                 <div class="card-item" onclick="sendCard('${card.emoji}', '${card.text}')">
@@ -1439,9 +1826,9 @@
         function renderCustomCards() {
             const customCards = JSON.parse(localStorage.getItem('customCards') || '[]');
             const html = customCards.map((card, index) => `
-                <div class="card-item">
-                    <img src="${card.image}" style="width: 100%; height: 100px; object-fit: cover; border-radius: 8px;">
-                    <button class="delete-btn" onclick="deleteCustomCard(${index})">×</button>
+                <div class="card-item" style="position: relative;">
+                    <img src="${card.image}" style="width: 100%; height: 120px; object-fit: cover; border-radius: 12px;">
+                    <button class="delete-btn" onclick="deleteCustomCard(${index})" style="position: absolute; top: 8px; right: 8px; background: white; border-radius: 50%; width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; box-shadow: var(--shadow-sm);">×</button>
                 </div>
             `).join('');
             document.getElementById('customCardsGrid').innerHTML = html;
@@ -1455,10 +1842,15 @@
         }
 
         function sendCard(emoji, text) {
-            alert(`Отправлена открытка: ${emoji} ${text}`);
+            const message = `💌 ${currentUser} отправил открытку: ${emoji} ${text}`;
+            const recipient = currentUser === 'Surikat' ? 'kot' : 'surikat';
+            sendTelegramNotification(message, recipient);
+            alert(`Открытка отправлена! ${emoji}`);
         }
 
-        // Lists management
+        // ========================================
+        // Lists Management
+        // ========================================
         function addWish() {
             addListItem('wishes', 'wishInput', '⭐');
         }
@@ -1506,418 +1898,3 @@
             const text = input.value.trim();
             if (text) {
                 const items = JSON.parse(localStorage.getItem(key) || '[]');
-                items.push({ text, createdAt: new Date().toISOString() });
-                localStorage.setItem(key, JSON.stringify(items));
-                input.value = '';
-                renderList(key, `${key}List`, emoji);
-            }
-        }
-
-        function renderList(key, containerId, emoji) {
-            const items = JSON.parse(localStorage.getItem(key) || '[]');
-            const html = items.map((item, index) => `
-                <div class="list-item">
-                    <div class="list-item-content">
-                        <div class="list-item-text">${emoji} ${item.text}</div>
-                        ${item.date ? `<div class="list-item-date">До: ${new Date(item.date).toLocaleDateString('ru-RU')}</div>` : ''}
-                    </div>
-                    <button class="delete-btn" onclick="deleteListItem('${key}', ${index}, '${containerId}', '${emoji}')">×</button>
-                </div>
-            `).join('');
-            document.getElementById(containerId).innerHTML = html || '<p style="text-align: center; color: var(--color-text-light);">Пока ничего не добавлено</p>';
-        }
-
-        function renderGuide() {
-            const guide = JSON.parse(localStorage.getItem('guide') || '[]');
-            const html = guide.map((item, index) => `
-                <div class="list-item">
-                    <div class="list-item-content">
-                        <div class="list-item-text">🗺️ ${item.name}</div>
-                        <div class="list-item-date">${item.desc}</div>
-                    </div>
-                    <button class="delete-btn" onclick="deleteListItem('guide', ${index}, 'guideList', '')">×</button>
-                </div>
-            `).join('');
-            document.getElementById('guideList').innerHTML = html || '<p style="text-align: center; color: var(--color-text-light);">Пока ничего не добавлено</p>';
-        }
-
-        function deleteListItem(key, index, containerId, emoji) {
-            const items = JSON.parse(localStorage.getItem(key) || '[]');
-            items.splice(index, 1);
-            localStorage.setItem(key, JSON.stringify(items));
-            if (key === 'guide') {
-                renderGuide();
-            } else {
-                renderList(key, containerId, emoji);
-            }
-        }
-
-        function loadAllLists() {
-            renderList('wishes', 'wishesList', '⭐');
-            renderList('plans', 'plansList', '📝');
-            renderList('places', 'placesList', '📍');
-            renderList('ideas', 'ideasList', '💡');
-            renderList('goals', 'goalsList', '🎯');
-            renderGuide();
-            
-            // Add templates to wishes if empty
-            const wishes = JSON.parse(localStorage.getItem('wishes') || '[]');
-            if (wishes.length === 0) {
-                wishesTemplates.forEach(wish => {
-                    wishes.push({ text: wish, createdAt: new Date().toISOString() });
-                });
-                localStorage.setItem('wishes', JSON.stringify(wishes));
-                renderList('wishes', 'wishesList', '⭐');
-            }
-        }
-
-        // Chat
-        function loadChat() {
-            const messages = JSON.parse(localStorage.getItem('chatMessages') || '[]');
-            renderChat(messages);
-        }
-
-        function renderChat(messages) {
-            const html = messages.map(msg => `
-                <div class="chat-message ${msg.sender === currentUser ? 'sent' : 'received'}">
-                    <div>${msg.text}</div>
-                    <div class="chat-message-time">${new Date(msg.timestamp).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}</div>
-                </div>
-            `).join('');
-            document.getElementById('chatMessages').innerHTML = html;
-            document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
-        }
-
-        function sendMessage() {
-            const input = document.getElementById('chatInput');
-            const text = input.value.trim();
-            if (text) {
-                const messages = JSON.parse(localStorage.getItem('chatMessages') || '[]');
-                messages.push({
-                    text,
-                    sender: currentUser,
-                    timestamp: new Date().toISOString()
-                });
-                localStorage.setItem('chatMessages', JSON.stringify(messages));
-                input.value = '';
-                renderChat(messages);
-            }
-        }
-
-        document.getElementById('chatInput').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                sendMessage();
-            }
-        });
-
-        // Drawing
-        function initDrawingCanvas() {
-            canvas = document.getElementById('drawingCanvas');
-            ctx = canvas.getContext('2d');
-            canvas.width = canvas.offsetWidth;
-            canvas.height = 500;
-
-            canvas.addEventListener('mousedown', startDrawing);
-            canvas.addEventListener('mousemove', draw);
-            canvas.addEventListener('mouseup', stopDrawing);
-            canvas.addEventListener('mouseout', stopDrawing);
-
-            canvas.addEventListener('touchstart', handleTouch);
-            canvas.addEventListener('touchmove', handleTouch);
-            canvas.addEventListener('touchend', stopDrawing);
-        }
-
-        function startDrawing(e) {
-            isDrawing = true;
-            const rect = canvas.getBoundingClientRect();
-            ctx.beginPath();
-            ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
-        }
-
-        function draw(e) {
-            if (!isDrawing) return;
-            const rect = canvas.getBoundingClientRect();
-            ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
-            ctx.strokeStyle = document.getElementById('colorPicker').value;
-            ctx.lineWidth = document.getElementById('brushSize').value;
-            ctx.lineCap = 'round';
-            ctx.stroke();
-        }
-
-        function stopDrawing() {
-            isDrawing = false;
-        }
-
-        function handleTouch(e) {
-            e.preventDefault();
-            const touch = e.touches[0];
-            const mouseEvent = new MouseEvent(e.type === 'touchstart' ? 'mousedown' : e.type === 'touchmove' ? 'mousemove' : 'mouseup', {
-                clientX: touch.clientX,
-                clientY: touch.clientY
-            });
-            canvas.dispatchEvent(mouseEvent);
-        }
-
-        function clearCanvas() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
-
-        function saveDrawing() {
-            const dataUrl = canvas.toDataURL();
-            const drawings = JSON.parse(localStorage.getItem('drawings') || '[]');
-            drawings.push({ image: dataUrl, date: new Date().toISOString() });
-            localStorage.setItem('drawings', JSON.stringify(drawings));
-            loadDrawingGallery();
-            alert('Рисунок сохранен в галерею!');
-        }
-
-        function newDrawing() {
-            if (confirm('Создать новый рисунок? Текущий будет очищен.')) {
-                clearCanvas();
-            }
-        }
-
-        function loadDrawingGallery() {
-            const drawings = JSON.parse(localStorage.getItem('drawings') || '[]');
-            const html = drawings.map((drawing, index) => `
-                <div class="gallery-item">
-                    <img src="${drawing.image}" alt="Drawing ${index + 1}">
-                    <button class="delete-btn" onclick="deleteDrawing(${index})" style="position: absolute; top: 5px; right: 5px; background: white; border-radius: 50%; width: 30px; height: 30px;">×</button>
-                </div>
-            `).join('');
-            document.getElementById('drawingGallery').innerHTML = html || '<p style="text-align: center; color: var(--color-text-light); grid-column: 1 / -1;">Галерея пуста</p>';
-        }
-
-        function deleteDrawing(index) {
-            const drawings = JSON.parse(localStorage.getItem('drawings') || '[]');
-            drawings.splice(index, 1);
-            localStorage.setItem('drawings', JSON.stringify(drawings));
-            loadDrawingGallery();
-        }
-
-        // Media
-        function addMedia(type) {
-            const input = document.getElementById(`${type}Input`);
-            const text = input.value.trim();
-            if (text) {
-                const media = JSON.parse(localStorage.getItem(`media_${type}`) || '[]');
-                media.push({ text, user: currentUser, date: new Date().toISOString() });
-                localStorage.setItem(`media_${type}`, JSON.stringify(media));
-                input.value = '';
-                renderMedia(type);
-            }
-        }
-
-        function renderMedia(type) {
-            const media = JSON.parse(localStorage.getItem(`media_${type}`) || '[]');
-            const icons = { reading: '📖', watching: '📺', listening: '🎵' };
-            const html = media.map((item, index) => `
-                <div class="media-item">
-                    <h4>${icons[type]} ${item.text}</h4>
-                    <div class="media-author">${item.user} • ${new Date(item.date).toLocaleDateString('ru-RU')}</div>
-                    <button class="delete-btn" onclick="deleteMedia('${type}', ${index})">×</button>
-                </div>
-            `).join('');
-            document.getElementById(`${type}List`).innerHTML = html || '<p style="text-align: center; color: var(--color-text-light);">Пока ничего не добавлено</p>';
-        }
-
-        function deleteMedia(type, index) {
-            const media = JSON.parse(localStorage.getItem(`media_${type}`) || '[]');
-            media.splice(index, 1);
-            localStorage.setItem(`media_${type}`, JSON.stringify(media));
-            renderMedia(type);
-        }
-
-        function loadMedia() {
-            renderMedia('reading');
-            renderMedia('watching');
-            renderMedia('listening');
-        }
-
-        // Extras
-        function addTimeCapsule() {
-            const text = document.getElementById('capsuleInput').value.trim();
-            const date = document.getElementById('capsuleDate').value;
-            if (text && date) {
-                const capsules = JSON.parse(localStorage.getItem('timeCapsules') || '[]');
-                capsules.push({ text, openDate: date, createdAt: new Date().toISOString(), opened: false });
-                localStorage.setItem('timeCapsules', JSON.stringify(capsules));
-                document.getElementById('capsuleInput').value = '';
-                document.getElementById('capsuleDate').value = '';
-                renderTimeCapsules();
-            }
-        }
-
-        function renderTimeCapsules() {
-            const capsules = JSON.parse(localStorage.getItem('timeCapsules') || '[]');
-            const now = new Date();
-            const html = capsules.map((capsule, index) => {
-                const openDate = new Date(capsule.openDate);
-                const canOpen = openDate <= now;
-                return `
-                    <div class="list-item">
-                        <div class="list-item-content">
-                            <div class="list-item-text">${canOpen ? '🔓' : '🔒'} ${canOpen || capsule.opened ? capsule.text : 'Капсула откроется ' + openDate.toLocaleDateString('ru-RU')}</div>
-                        </div>
-                        ${canOpen && !capsule.opened ? `<button class="btn btn-small btn-primary" onclick="openCapsule(${index})">Открыть</button>` : ''}
-                    </div>
-                `;
-            }).join('');
-            document.getElementById('capsulesList').innerHTML = html || '<p style="text-align: center; color: var(--color-text-light);">Капсул пока нет</p>';
-        }
-
-        function openCapsule(index) {
-            const capsules = JSON.parse(localStorage.getItem('timeCapsules') || '[]');
-            capsules[index].opened = true;
-            localStorage.setItem('timeCapsules', JSON.stringify(capsules));
-            renderTimeCapsules();
-        }
-
-        function showRandomCompliment() {
-            const compliment = compliments[Math.floor(Math.random() * compliments.length)];
-            document.getElementById('complimentText').textContent = compliment;
-        }
-
-        function saveMood(emoji, mood) {
-            const moods = JSON.parse(localStorage.getItem('moods') || '[]');
-            moods.push({ emoji, mood, user: currentUser, date: new Date().toISOString() });
-            localStorage.setItem('moods', JSON.stringify(moods));
-            renderMoodHistory();
-            alert(`Настроение сохранено: ${emoji} ${mood}`);
-        }
-
-        function renderMoodHistory() {
-            const moods = JSON.parse(localStorage.getItem('moods') || '[]');
-            const recent = moods.slice(-5).reverse();
-            const html = recent.map(m => `
-                <div style="display: flex; justify-content: space-between; padding: 10px; background: var(--color-bg); border-radius: 8px; margin-top: 10px;">
-                    <span>${m.emoji} ${m.mood}</span>
-                    <span style="color: var(--color-text-light); font-size: 0.85em;">${new Date(m.date).toLocaleDateString('ru-RU')}</span>
-                </div>
-            `).join('');
-            document.getElementById('moodHistory').innerHTML = html;
-        }
-
-        function addGratitude() {
-            const text = document.getElementById('gratitudeInput').value.trim();
-            if (text) {
-                const gratitudes = JSON.parse(localStorage.getItem('gratitudes') || '[]');
-                gratitudes.push({ text, user: currentUser, date: new Date().toISOString() });
-                localStorage.setItem('gratitudes', JSON.stringify(gratitudes));
-                document.getElementById('gratitudeInput').value = '';
-                renderGratitudes();
-            }
-        }
-
-        function renderGratitudes() {
-            const gratitudes = JSON.parse(localStorage.getItem('gratitudes') || '[]');
-            const html = gratitudes.map((item, index) => `
-                <div class="list-item">
-                    <div class="list-item-content">
-                        <div class="list-item-text">🙏 ${item.text}</div>
-                        <div class="list-item-date">${item.user} • ${new Date(item.date).toLocaleDateString('ru-RU')}</div>
-                    </div>
-                    <button class="delete-btn" onclick="deleteGratitude(${index})">×</button>
-                </div>
-            `).join('');
-            document.getElementById('gratitudeList').innerHTML = html || '<p style="text-align: center; color: var(--color-text-light);">Пока ничего не добавлено</p>';
-        }
-
-        function deleteGratitude(index) {
-            const gratitudes = JSON.parse(localStorage.getItem('gratitudes') || '[]');
-            gratitudes.splice(index, 1);
-            localStorage.setItem('gratitudes', JSON.stringify(gratitudes));
-            renderGratitudes();
-        }
-
-        function addMusic() {
-            const text = document.getElementById('musicInput').value.trim();
-            if (text) {
-                const music = JSON.parse(localStorage.getItem('music') || '[]');
-                music.push({ text, user: currentUser, date: new Date().toISOString() });
-                localStorage.setItem('music', JSON.stringify(music));
-                document.getElementById('musicInput').value = '';
-                renderMusic();
-            }
-        }
-
-        function renderMusic() {
-            const music = JSON.parse(localStorage.getItem('music') || '[]');
-            const html = music.map((item, index) => `
-                <div class="list-item">
-                    <div class="list-item-content">
-                        <div class="list-item-text">🎵 ${item.text}</div>
-                        <div class="list-item-date">${item.user}</div>
-                    </div>
-                    <button class="delete-btn" onclick="deleteMusic(${index})">×</button>
-                </div>
-            `).join('');
-            document.getElementById('musicList').innerHTML = html || '<p style="text-align: center; color: var(--color-text-light);">Плейлист пуст</p>';
-        }
-
-        function deleteMusic(index) {
-            const music = JSON.parse(localStorage.getItem('music') || '[]');
-            music.splice(index, 1);
-            localStorage.setItem('music', JSON.stringify(music));
-            renderMusic();
-        }
-
-        function loadExtras() {
-            renderTimeCapsules();
-            renderMoodHistory();
-            renderGratitudes();
-            renderMusic();
-        }
-
-        // Quiz
-        let currentQuizIndex = 0;
-        let quizScore = 0;
-
-        function loadQuizQuestion() {
-            if (quizQuestions.length === 0) return;
-            currentQuizIndex = Math.floor(Math.random() * quizQuestions.length);
-            const question = quizQuestions[currentQuizIndex];
-            document.getElementById('quizQuestion').textContent = question.question;
-            const html = question.options.map((option, index) => `
-                <div class="quiz-option" onclick="selectQuizAnswer(${index})">${option}</div>
-            `).join('');
-            document.getElementById('quizOptions').innerHTML = html;
-        }
-
-        function selectQuizAnswer(index) {
-            alert('Ответ записан! Обсудите правильность ответа вместе 😊');
-        }
-
-        // Love signals
-        function sendLoveSignal(emoji) {
-            const x = Math.random() * window.innerWidth;
-            const y = window.innerHeight;
-            const heart = document.createElement('div');
-            heart.className = 'floating-heart';
-            heart.textContent = emoji;
-            heart.style.left = x + 'px';
-            heart.style.top = y + 'px';
-            document.body.appendChild(heart);
-            setTimeout(() => heart.remove(), 3000);
-        }
-
-        // Tab switching
-        function switchTab(tabName) {
-            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
-            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
-            event.target.classList.add('active');
-            document.getElementById(tabName + 'Tab').classList.add('active');
-        }
-
-        // Logout
-        function logout() {
-            if (confirm('Вы уверены, что хотите выйти?')) {
-                document.getElementById('appContainer').style.display = 'none';
-                document.getElementById('loginScreen').style.display = 'flex';
-                document.getElementById('loginUsername').value = '';
-                document.getElementById('loginPassword').value = '';
-            }
-        }
-    </script>
-</body>
-</html>
