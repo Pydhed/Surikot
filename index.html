@@ -1898,3 +1898,439 @@
             const text = input.value.trim();
             if (text) {
                 const items = JSON.parse(localStorage.getItem(key) || '[]');
+                items.push({ text, createdAt: new Date().toISOString() });
+                localStorage.setItem(key, JSON.stringify(items));
+                input.value = '';
+                renderList(key, `${key}List`, emoji);
+            }
+        }
+
+        function renderList(key, containerId, emoji) {
+            const items = JSON.parse(localStorage.getItem(key) || '[]');
+            const html = items.map((item, index) => `
+                <div class="list-item">
+                    <div class="list-item-content">
+                        <div class="list-item-text">${emoji} ${item.text}</div>
+                        ${item.date ? `<div class="list-item-date">До: ${new Date(item.date).toLocaleDateString('ru-RU')}</div>` : ''}
+                    </div>
+                    <button class="delete-btn" onclick="deleteListItem('${key}', ${index}, '${containerId}', '${emoji}')">×</button>
+                </div>
+            `).join('');
+            document.getElementById(containerId).innerHTML = html || '<p style="text-align: center; color: var(--color-text-light); padding: 20px;">Пока ничего не добавлено</p>';
+        }
+
+        function renderGuide() {
+            const guide = JSON.parse(localStorage.getItem('guide') || '[]');
+            const html = guide.map((item, index) => `
+                <div class="list-item">
+                    <div class="list-item-content">
+                        <div class="list-item-text">🗺️ ${item.name}</div>
+                        <div class="list-item-date">${item.desc}</div>
+                    </div>
+                    <button class="delete-btn" onclick="deleteListItem('guide', ${index}, 'guideList', '')">×</button>
+                </div>
+            `).join('');
+            document.getElementById('guideList').innerHTML = html || '<p style="text-align: center; color: var(--color-text-light); padding: 20px;">Пока ничего не добавлено</p>';
+        }
+
+        function deleteListItem(key, index, containerId, emoji) {
+            const items = JSON.parse(localStorage.getItem(key) || '[]');
+            items.splice(index, 1);
+            localStorage.setItem(key, JSON.stringify(items));
+            if (key === 'guide') {
+                renderGuide();
+            } else {
+                renderList(key, containerId, emoji);
+            }
+        }
+
+        function loadAllLists() {
+            renderList('wishes', 'wishesList', '⭐');
+            renderList('plans', 'plansList', '📝');
+            renderList('places', 'placesList', '📍');
+            renderList('ideas', 'ideasList', '💡');
+            renderList('goals', 'goalsList', '🎯');
+            renderGuide();
+            
+            const wishes = JSON.parse(localStorage.getItem('wishes') || '[]');
+            if (wishes.length === 0) {
+                wishesTemplates.forEach(wish => {
+                    wishes.push({ text: wish, createdAt: new Date().toISOString() });
+                });
+                localStorage.setItem('wishes', JSON.stringify(wishes));
+                renderList('wishes', 'wishesList', '⭐');
+            }
+        }
+
+        // ========================================
+        // Chat
+        // ========================================
+        function loadChat() {
+            const messages = JSON.parse(localStorage.getItem('chatMessages') || '[]');
+            renderChat(messages);
+        }
+
+        function renderChat(messages) {
+            const html = messages.map(msg => `
+                <div class="chat-message ${msg.sender === currentUser ? 'sent' : 'received'}">
+                    <div>${msg.text}</div>
+                    <div class="chat-message-time">${new Date(msg.timestamp).toLocaleTimeString('ru-RU', { hour: '2-digit', minute: '2-digit' })}</div>
+                </div>
+            `).join('');
+            document.getElementById('chatMessages').innerHTML = html;
+            document.getElementById('chatMessages').scrollTop = document.getElementById('chatMessages').scrollHeight;
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const text = input.value.trim();
+            if (text) {
+                const messages = JSON.parse(localStorage.getItem('chatMessages') || '[]');
+                messages.push({
+                    text,
+                    sender: currentUser,
+                    timestamp: new Date().toISOString()
+                });
+                localStorage.setItem('chatMessages', JSON.stringify(messages));
+                input.value = '';
+                renderChat(messages);
+                
+                // Send Telegram notification
+                const recipient = currentUser === 'Surikat' ? 'kot' : 'surikat';
+                sendTelegramNotification(`💬 Новое сообщение от ${currentUser}: ${text}`, recipient);
+            }
+        }
+
+        // ========================================
+        // Drawing
+        // ========================================
+        function initDrawingCanvas() {
+            canvas = document.getElementById('drawingCanvas');
+            ctx = canvas.getContext('2d');
+            canvas.width = canvas.offsetWidth;
+            canvas.height = 500;
+
+            canvas.addEventListener('mousedown', startDrawing);
+            canvas.addEventListener('mousemove', draw);
+            canvas.addEventListener('mouseup', stopDrawing);
+            canvas.addEventListener('mouseout', stopDrawing);
+
+            canvas.addEventListener('touchstart', handleTouch);
+            canvas.addEventListener('touchmove', handleTouch);
+            canvas.addEventListener('touchend', stopDrawing);
+        }
+
+        function startDrawing(e) {
+            isDrawing = true;
+            const rect = canvas.getBoundingClientRect();
+            ctx.beginPath();
+            ctx.moveTo(e.clientX - rect.left, e.clientY - rect.top);
+        }
+
+        function draw(e) {
+            if (!isDrawing) return;
+            const rect = canvas.getBoundingClientRect();
+            ctx.lineTo(e.clientX - rect.left, e.clientY - rect.top);
+            ctx.strokeStyle = document.getElementById('colorPicker').value;
+            ctx.lineWidth = document.getElementById('brushSize').value;
+            ctx.lineCap = 'round';
+            ctx.stroke();
+        }
+
+        function stopDrawing() {
+            isDrawing = false;
+        }
+
+        function handleTouch(e) {
+            e.preventDefault();
+            const touch = e.touches[0];
+            const mouseEvent = new MouseEvent(e.type === 'touchstart' ? 'mousedown' : e.type === 'touchmove' ? 'mousemove' : 'mouseup', {
+                clientX: touch.clientX,
+                clientY: touch.clientY
+            });
+            canvas.dispatchEvent(mouseEvent);
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        function saveDrawing() {
+            const dataUrl = canvas.toDataURL();
+            const drawings = JSON.parse(localStorage.getItem('drawings') || '[]');
+            drawings.push({ image: dataUrl, date: new Date().toISOString() });
+            localStorage.setItem('drawings', JSON.stringify(drawings));
+            loadDrawingGallery();
+            
+            const recipient = currentUser === 'Surikat' ? 'kot' : 'surikat';
+            sendTelegramNotification(`🎨 ${currentUser} сохранил новый рисунок в галерею!`, recipient);
+            
+            alert('Рисунок сохранен в галерею!');
+        }
+
+        function newDrawing() {
+            if (confirm('Создать новый рисунок? Текущий будет очищен.')) {
+                clearCanvas();
+            }
+        }
+
+        function loadDrawingGallery() {
+            const drawings = JSON.parse(localStorage.getItem('drawings') || '[]');
+            const html = drawings.map((drawing, index) => `
+                <div class="gallery-item" style="position: relative;">
+                    <img src="${drawing.image}" alt="Drawing ${index + 1}">
+                    <button class="delete-btn" onclick="deleteDrawing(${index})" style="position: absolute; top: 8px; right: 8px; background: white; border-radius: 50%; width: 36px; height: 36px; box-shadow: var(--shadow-md);">×</button>
+                </div>
+            `).join('');
+            document.getElementById('drawingGallery').innerHTML = html || '<p style="text-align: center; color: var(--color-text-light); grid-column: 1 / -1; padding: 40px;">Галерея пуста</p>';
+        }
+
+        function deleteDrawing(index) {
+            const drawings = JSON.parse(localStorage.getItem('drawings') || '[]');
+            drawings.splice(index, 1);
+            localStorage.setItem('drawings', JSON.stringify(drawings));
+            loadDrawingGallery();
+        }
+
+        // ========================================
+        // Media
+        // ========================================
+        function addMedia(type) {
+            const input = document.getElementById(`${type}Input`);
+            const text = input.value.trim();
+            if (text) {
+                const media = JSON.parse(localStorage.getItem(`media_${type}`) || '[]');
+                media.push({ text, user: currentUser, date: new Date().toISOString() });
+                localStorage.setItem(`media_${type}`, JSON.stringify(media));
+                input.value = '';
+                renderMedia(type);
+            }
+        }
+
+        function renderMedia(type) {
+            const media = JSON.parse(localStorage.getItem(`media_${type}`) || '[]');
+            const icons = { reading: '📖', watching: '📺', listening: '🎵' };
+            const html = media.map((item, index) => `
+                <div class="media-item">
+                    <h4>${icons[type]} ${item.text}</h4>
+                    <div class="media-author">${item.user} • ${new Date(item.date).toLocaleDateString('ru-RU')}</div>
+                    <button class="delete-btn" onclick="deleteMedia('${type}', ${index})" style="position: absolute; top: 12px; right: 12px;">×</button>
+                </div>
+            `).join('');
+            document.getElementById(`${type}List`).innerHTML = html || '<p style="text-align: center; color: var(--color-text-light); padding: 20px;">Пока ничего не добавлено</p>';
+        }
+
+        function deleteMedia(type, index) {
+            const media = JSON.parse(localStorage.getItem(`media_${type}`) || '[]');
+            media.splice(index, 1);
+            localStorage.setItem(`media_${type}`, JSON.stringify(media));
+            renderMedia(type);
+        }
+
+        function loadMedia() {
+            renderMedia('reading');
+            renderMedia('watching');
+            renderMedia('listening');
+        }
+
+        // ========================================
+        // Extras
+        // ========================================
+        function addTimeCapsule() {
+            const text = document.getElementById('capsuleInput').value.trim();
+            const date = document.getElementById('capsuleDate').value;
+            if (text && date) {
+                const capsules = JSON.parse(localStorage.getItem('timeCapsules') || '[]');
+                capsules.push({ text, openDate: date, createdAt: new Date().toISOString(), opened: false });
+                localStorage.setItem('timeCapsules', JSON.stringify(capsules));
+                document.getElementById('capsuleInput').value = '';
+                document.getElementById('capsuleDate').value = '';
+                renderTimeCapsules();
+            }
+        }
+
+        function renderTimeCapsules() {
+            const capsules = JSON.parse(localStorage.getItem('timeCapsules') || '[]');
+            const now = new Date();
+            const html = capsules.map((capsule, index) => {
+                const openDate = new Date(capsule.openDate);
+                const canOpen = openDate <= now;
+                return `
+                    <div class="list-item">
+                        <div class="list-item-content">
+                            <div class="list-item-text">${canOpen ? '🔓' : '🔒'} ${canOpen || capsule.opened ? capsule.text : 'Капсула откроется ' + openDate.toLocaleDateString('ru-RU')}</div>
+                        </div>
+                        ${canOpen && !capsule.opened ? `<button class="btn btn-small btn-primary" onclick="openCapsule(${index})">Открыть</button>` : ''}
+                    </div>
+                `;
+            }).join('');
+            document.getElementById('capsulesList').innerHTML = html || '<p style="text-align: center; color: var(--color-text-light); padding: 20px;">Капсул пока нет</p>';
+        }
+
+        function openCapsule(index) {
+            const capsules = JSON.parse(localStorage.getItem('timeCapsules') || '[]');
+            capsules[index].opened = true;
+            localStorage.setItem('timeCapsules', JSON.stringify(capsules));
+            renderTimeCapsules();
+        }
+
+        function showRandomCompliment() {
+            const compliment = compliments[Math.floor(Math.random() * compliments.length)];
+            document.getElementById('complimentText').textContent = compliment;
+        }
+
+        function saveMood(emoji, mood) {
+            const moods = JSON.parse(localStorage.getItem('moods') || '[]');
+            moods.push({ emoji, mood, user: currentUser, date: new Date().toISOString() });
+            localStorage.setItem('moods', JSON.stringify(moods));
+            renderMoodHistory();
+            alert(`Настроение сохранено: ${emoji} ${mood}`);
+        }
+
+        function renderMoodHistory() {
+            const moods = JSON.parse(localStorage.getItem('moods') || '[]');
+            const recent = moods.slice(-5).reverse();
+            const html = recent.map(m => `
+                <div style="display: flex; justify-content: space-between; padding: 12px; background: var(--color-bg); border-radius: 10px; margin-top: 12px; border: 1px solid var(--color-border);">
+                    <span style="font-weight: 500;">${m.emoji} ${m.mood}</span>
+                    <span style="color: var(--color-text-light); font-size: 0.9em;">${new Date(m.date).toLocaleDateString('ru-RU')}</span>
+                </div>
+            `).join('');
+            document.getElementById('moodHistory').innerHTML = html;
+        }
+
+        function addGratitude() {
+            const text = document.getElementById('gratitudeInput').value.trim();
+            if (text) {
+                const gratitudes = JSON.parse(localStorage.getItem('gratitudes') || '[]');
+                gratitudes.push({ text, user: currentUser, date: new Date().toISOString() });
+                localStorage.setItem('gratitudes', JSON.stringify(gratitudes));
+                document.getElementById('gratitudeInput').value = '';
+                renderGratitudes();
+            }
+        }
+
+        function renderGratitudes() {
+            const gratitudes = JSON.parse(localStorage.getItem('gratitudes') || '[]');
+            const html = gratitudes.map((item, index) => `
+                <div class="list-item">
+                    <div class="list-item-content">
+                        <div class="list-item-text">🙏 ${item.text}</div>
+                        <div class="list-item-date">${item.user} • ${new Date(item.date).toLocaleDateString('ru-RU')}</div>
+                    </div>
+                    <button class="delete-btn" onclick="deleteGratitude(${index})">×</button>
+                </div>
+            `).join('');
+            document.getElementById('gratitudeList').innerHTML = html || '<p style="text-align: center; color: var(--color-text-light); padding: 20px;">Пока ничего не добавлено</p>';
+        }
+
+        function deleteGratitude(index) {
+            const gratitudes = JSON.parse(localStorage.getItem('gratitudes') || '[]');
+            gratitudes.splice(index, 1);
+            localStorage.setItem('gratitudes', JSON.stringify(gratitudes));
+            renderGratitudes();
+        }
+
+        function addMusic() {
+            const text = document.getElementById('musicInput').value.trim();
+            if (text) {
+                const music = JSON.parse(localStorage.getItem('music') || '[]');
+                music.push({ text, user: currentUser, date: new Date().toISOString() });
+                localStorage.setItem('music', JSON.stringify(music));
+                document.getElementById('musicInput').value = '';
+                renderMusic();
+            }
+        }
+
+        function renderMusic() {
+            const music = JSON.parse(localStorage.getItem('music') || '[]');
+            const html = music.map((item, index) => `
+                <div class="list-item">
+                    <div class="list-item-content">
+                        <div class="list-item-text">🎵 ${item.text}</div>
+                        <div class="list-item-date">${item.user}</div>
+                    </div>
+                    <button class="delete-btn" onclick="deleteMusic(${index})">×</button>
+                </div>
+            `).join('');
+            document.getElementById('musicList').innerHTML = html || '<p style="text-align: center; color: var(--color-text-light); padding: 20px;">Плейлист пуст</p>';
+        }
+
+        function deleteMusic(index) {
+            const music = JSON.parse(localStorage.getItem('music') || '[]');
+            music.splice(index, 1);
+            localStorage.setItem('music', JSON.stringify(music));
+            renderMusic();
+        }
+
+        function loadExtras() {
+            renderTimeCapsules();
+            renderMoodHistory();
+            renderGratitudes();
+            renderMusic();
+        }
+
+        // ========================================
+        // Quiz
+        // ========================================
+        let currentQuizIndex = 0;
+
+        function loadQuizQuestion() {
+            if (quizQuestions.length === 0) return;
+            currentQuizIndex = Math.floor(Math.random() * quizQuestions.length);
+            const question = quizQuestions[currentQuizIndex];
+            document.getElementById('quizQuestion').textContent = question.question;
+            const html = question.options.map((option, index) => `
+                <div class="quiz-option" onclick="selectQuizAnswer(${index})">${option}</div>
+            `).join('');
+            document.getElementById('quizOptions').innerHTML = html;
+            document.getElementById('quizScore').textContent = '';
+        }
+
+        function selectQuizAnswer(index) {
+            alert('Ответ записан! Обсудите правильность ответа вместе 😊');
+        }
+
+        // ========================================
+        // Love Signals
+        // ========================================
+        function sendLoveSignal(emoji) {
+            const x = Math.random() * (window.innerWidth - 100);
+            const y = window.innerHeight - 100;
+            const heart = document.createElement('div');
+            heart.className = 'floating-heart';
+            heart.textContent = emoji;
+            heart.style.left = x + 'px';
+            heart.style.top = y + 'px';
+            document.body.appendChild(heart);
+            setTimeout(() => heart.remove(), 3000);
+            
+            const recipient = currentUser === 'Surikat' ? 'kot' : 'surikat';
+            const signals = { '❤️': 'сердечко', '💋': 'поцелуй', '🤗': 'обнимашки' };
+            sendTelegramNotification(`${emoji} ${currentUser} отправил вам ${signals[emoji]}!`, recipient);
+        }
+
+        // ========================================
+        // Tab Switching
+        // ========================================
+        function switchTab(tabName) {
+            document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+            event.target.classList.add('active');
+            document.getElementById(tabName + 'Tab').classList.add('active');
+        }
+
+        // ========================================
+        // Logout
+        // ========================================
+        function logout() {
+            if (confirm('Вы уверены, что хотите выйти?')) {
+                document.getElementById('appContainer').style.display = 'none';
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('loginUsername').value = '';
+                document.getElementById('loginPassword').value = '';
+            }
+        }
+    </script>
+</body>
+</html>
