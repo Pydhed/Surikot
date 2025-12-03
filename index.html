@@ -1,3 +1,11 @@
+Отлично! Сейчас я модифицирую код так, чтобы:
+
+1. **Две учетные записи**: суриката (логин: `surikat`, пароль: `chelovek`) и кота (логин: `kot`, пароль: `chelovek`)
+2. **Уведомления в Telegram**: когда один пользователь что-то делает, второй получает уведомление
+
+Вот обновленный код:
+
+```html
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -736,6 +744,7 @@
             box-shadow: var(--shadow-sm);
             cursor: pointer;
             transition: transform 0.3s;
+            position: relative;
         }
 
         .gallery-item:hover {
@@ -890,6 +899,7 @@
             background: var(--color-bg);
             padding: 15px;
             border-radius: 10px;
+            position: relative;
         }
 
         .media-item h4 {
@@ -1299,15 +1309,32 @@
     <script>
         // Constants
         const MEETING_DATE = new Date('2024-06-24');
-        const CREDENTIALS = { username: 'surikat', password: 'chelovek' };
+        
+        // Учетные записи для обоих пользователей
+        const ACCOUNTS = {
+            surikat: { username: 'surikat', password: 'chelovek', displayName: 'Сурикат', emoji: '🦝' },
+            kot: { username: 'kot', password: 'chelovek', displayName: 'Кот', emoji: '🐱' }
+        };
 
         const BIRTHDAYS = {
-            surikat: { month: 8, day: 12, name: 'День рождения Суриката', phone: '+79169148648' },
-            kot: { month: 3, day: 18, name: 'День рождения Кота', phone: '+79164638352' }
+            surikat: { month: 8, day: 12, name: 'День рождения Суриката' },
+            kot: { month: 3, day: 18, name: 'День рождения Кота' }
+        };
+
+        // Telegram Bot Configuration
+        // ВАЖНО: Для production используйте serverless функцию!
+        const TELEGRAM_CONFIG = {
+            enabled: true, // Включено для демонстрации
+            botToken: 'YOUR_BOT_TOKEN_HERE', // ЗАМЕНИТЕ НА ВАШ ТОКЕН!
+            chatIds: {
+                surikat: 'SURIKAT_CHAT_ID', // ЗАМЕНИТЕ НА РЕАЛЬНЫЙ CHAT ID
+                kot: 'KOT_CHAT_ID' // ЗАМЕНИТЕ НА РЕАЛЬНЫЙ CHAT ID
+            }
         };
 
         // State
         let currentUser = null;
+        let currentUserKey = null; // 'surikat' или 'kot'
         let currentAvatarTarget = null;
         let isDrawing = false;
         let canvas, ctx;
@@ -1376,16 +1403,108 @@
             }
         ];
 
+        // ============================================
+        // TELEGRAM NOTIFICATIONS SYSTEM
+        // ============================================
+
+        /**
+         * Отправка уведомления через Telegram Bot API
+         * 
+         * ИНСТРУКЦИЯ ПО НАСТРОЙКЕ:
+         * 
+         * 1. Создайте бота через @BotFather в Telegram:
+         *    - Найдите @BotFather в поиске Telegram
+         *    - Отправьте команду /newbot
+         *    - Следуйте инструкциям и получите токен бота
+         * 
+         * 2. Получите Chat ID для каждого пользователя:
+         *    - Откройте диалог с вашим ботом
+         *    - Отправьте любое сообщение
+         *    - Откройте в браузере: https://api.telegram.org/bot<ВАШ_ТОКЕН>/getUpdates
+         *    - Найдите "chat":{"id":123456789} - это ваш Chat ID
+         * 
+         * 3. Вставьте токен и Chat ID в TELEGRAM_CONFIG выше
+         * 
+         * 4. Для production создайте serverless функцию (Vercel/Netlify/Cloudflare Workers)
+         *    чтобы скрыть токен бота от клиентского кода
+         */
+        
+        async function sendTelegramNotification(recipientKey, message, emoji = '💕') {
+            if (!TELEGRAM_CONFIG.enabled) {
+                console.log('Telegram уведомления отключены');
+                return;
+            }
+
+            if (TELEGRAM_CONFIG.botToken === 'YOUR_BOT_TOKEN_HERE') {
+                console.log('Настройте токен бота в TELEGRAM_CONFIG');
+                return;
+            }
+
+            try {
+                const chatId = TELEGRAM_CONFIG.chatIds[recipientKey];
+                if (!chatId || chatId === 'SURIKAT_CHAT_ID' || chatId === 'KOT_CHAT_ID') {
+                    console.error('Chat ID не настроен для:', recipientKey);
+                    return;
+                }
+
+                const formattedMessage = `${emoji} <b>Love Hub</b>\n\n${message}`;
+                const url = `https://api.telegram.org/bot${TELEGRAM_CONFIG.botToken}/sendMessage`;
+
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        chat_id: chatId,
+                        text: formattedMessage,
+                        parse_mode: 'HTML'
+                    })
+                });
+
+                if (response.ok) {
+                    console.log('✅ Уведомление отправлено в Telegram');
+                } else {
+                    const error = await response.text();
+                    console.error('❌ Ошибка отправки уведомления:', error);
+                }
+            } catch (error) {
+                console.error('❌ Ошибка Telegram API:', error);
+            }
+        }
+
+        /**
+         * Определяет получателя уведомления (противоположный аккаунт)
+         */
+        function getRecipientKey() {
+            return currentUserKey === 'surikat' ? 'kot' : 'surikat';
+        }
+
+        /**
+         * Получает отображаемое имя текущего пользователя
+         */
+        function getCurrentDisplayName() {
+            return ACCOUNTS[currentUserKey]?.displayName || currentUser;
+        }
+
         // Login
         document.getElementById('loginForm').addEventListener('submit', (e) => {
             e.preventDefault();
-            const username = document.getElementById('loginUsername').value.trim();
-            const password = document.getElementById('loginPassword').value.trim();
+            const username = document.getElementById('loginUsername').value.trim().toLowerCase();
+            const password = document.getElementById('loginPassword').value.trim().toLowerCase();
             
-            // Проверка логина и пароля
-            if (username.toLowerCase() === CREDENTIALS.username && 
-                password.toLowerCase() === CREDENTIALS.password) {
-                currentUser = 'Surikat'; // Фиксированное имя пользователя
+            // Проверка учетных записей
+            let authenticated = false;
+            for (const [key, account] of Object.entries(ACCOUNTS)) {
+                if (username === account.username && password === account.password) {
+                    currentUser = account.displayName;
+                    currentUserKey = key;
+                    authenticated = true;
+                    break;
+                }
+            }
+
+            if (authenticated) {
                 document.getElementById('loginScreen').style.display = 'none';
                 document.getElementById('appContainer').style.display = 'block';
                 initializeApp();
@@ -1448,6 +1567,14 @@
                     document.getElementById('avatarPreview').innerHTML = `<img src="${dataUrl}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
                     document.getElementById(`${currentAvatarTarget}Avatar`).innerHTML = `<img src="${dataUrl}" style="width: 100%; height: 100%; object-fit: cover; border-radius: 50%;">`;
                     closeAvatarModal();
+                    
+                    // Уведомление об обновлении аватара
+                    const targetName = ACCOUNTS[currentAvatarTarget]?.displayName || currentAvatarTarget;
+                    sendTelegramNotification(
+                        getRecipientKey(),
+                        `<b>${getCurrentDisplayName()}</b> обновил(а) аватар для <b>${targetName}</b>! 📸`,
+                        '🎨'
+                    );
                 };
                 reader.readAsDataURL(file);
             }
@@ -1549,9 +1676,16 @@
                 const reader = new FileReader();
                 reader.onload = (e) => {
                     const customCards = JSON.parse(localStorage.getItem('customCards') || '[]');
-                    customCards.push({ image: e.target.result, date: new Date().toISOString() });
+                    customCards.push({ image: e.target.result, date: new Date().toISOString(), sender: currentUser });
                     localStorage.setItem('customCards', JSON.stringify(customCards));
                     renderCustomCards();
+                    
+                    // Уведомление о новой открытке
+                    sendTelegramNotification(
+                        getRecipientKey(),
+                        `<b>${getCurrentDisplayName()}</b> загрузил(а) новую открытку! 🖼️`,
+                        '💌'
+                    );
                 };
                 reader.readAsDataURL(file);
             }
@@ -1560,9 +1694,10 @@
         function renderCustomCards() {
             const customCards = JSON.parse(localStorage.getItem('customCards') || '[]');
             const html = customCards.map((card, index) => `
-                <div class="card-item">
+                <div class="card-item" style="position: relative;">
                     <img src="${card.image}" style="width: 100%; height: 100px; object-fit: cover; border-radius: 8px;">
-                    <button class="delete-btn" onclick="deleteCustomCard(${index})">×</button>
+                    <div style="font-size: 0.7em; margin-top: 5px; color: var(--color-text-light);">${card.sender || 'Unknown'}</div>
+                    <button class="delete-btn" onclick="deleteCustomCard(${index})" style="position: absolute; top: 5px; right: 5px; background: white; border-radius: 50%; width: 25px; height: 25px; font-size: 1em;">×</button>
                 </div>
             `).join('');
             document.getElementById('customCardsGrid').innerHTML = html;
@@ -1577,11 +1712,26 @@
 
         function sendCard(emoji, text) {
             alert(`Отправлена открытка: ${emoji} ${text}`);
+            
+            // Уведомление об отправке открытки
+            sendTelegramNotification(
+                getRecipientKey(),
+                `<b>${getCurrentDisplayName()}</b> отправил(а) тебе открытку:\n\n${emoji} <i>${text}</i>`,
+                '💌'
+            );
         }
 
         // Lists management
         function addWish() {
             addListItem('wishes', 'wishInput', '⭐');
+            const text = document.getElementById('wishInput').value.trim();
+            if (text) {
+                sendTelegramNotification(
+                    getRecipientKey(),
+                    `<b>${getCurrentDisplayName()}</b> добавил(а) желание:\n\n⭐ <i>${text}</i>`,
+                    '⭐'
+                );
+            }
         }
 
         function addPlan() {
@@ -1594,19 +1744,50 @@
                 document.getElementById('planInput').value = '';
                 document.getElementById('planDate').value = '';
                 renderList('plans', 'plansList', '📝');
+                
+                // Уведомление о новом плане
+                sendTelegramNotification(
+                    getRecipientKey(),
+                    `<b>${getCurrentDisplayName()}</b> добавил(а) план:\n\n📝 <i>${text}</i>\n📅 ${new Date(date).toLocaleDateString('ru-RU')}`,
+                    '📝'
+                );
             }
         }
 
         function addPlace() {
             addListItem('places', 'placeInput', '📍');
+            const text = document.getElementById('placeInput').value.trim();
+            if (text) {
+                sendTelegramNotification(
+                    getRecipientKey(),
+                    `<b>${getCurrentDisplayName()}</b> добавил(а) место:\n\n📍 <i>${text}</i>`,
+                    '📍'
+                );
+            }
         }
 
         function addIdea() {
             addListItem('ideas', 'ideaInput', '💡');
+            const text = document.getElementById('ideaInput').value.trim();
+            if (text) {
+                sendTelegramNotification(
+                    getRecipientKey(),
+                    `<b>${getCurrentDisplayName()}</b> добавил(а) идею:\n\n💡 <i>${text}</i>`,
+                    '💡'
+                );
+            }
         }
 
         function addGoal() {
             addListItem('goals', 'goalInput', '🎯');
+            const text = document.getElementById('goalInput').value.trim();
+            if (text) {
+                sendTelegramNotification(
+                    getRecipientKey(),
+                    `<b>${getCurrentDisplayName()}</b> добавил(а) цель:\n\n🎯 <i>${text}</i>`,
+                    '🎯'
+                );
+            }
         }
 
         function addGuidePlace() {
@@ -1619,6 +1800,13 @@
                 document.getElementById('guideNameInput').value = '';
                 document.getElementById('guideDescInput').value = '';
                 renderGuide();
+                
+                // Уведомление о новом месте
+                sendTelegramNotification(
+                    getRecipientKey(),
+                    `<b>${getCurrentDisplayName()}</b> добавил(а) место в путеводитель:\n\n🗺️ <b>${name}</b>\n${desc}`,
+                    '🗺️'
+                );
             }
         }
 
@@ -1722,6 +1910,13 @@
                 localStorage.setItem('chatMessages', JSON.stringify(messages));
                 input.value = '';
                 renderChat(messages);
+                
+                // Уведомление о новом сообщении
+                sendTelegramNotification(
+                    getRecipientKey(),
+                    `<b>Новое сообщение от ${getCurrentDisplayName()}:</b>\n\n${text}`,
+                    '💬'
+                );
             }
         }
 
@@ -1786,10 +1981,17 @@
         function saveDrawing() {
             const dataUrl = canvas.toDataURL();
             const drawings = JSON.parse(localStorage.getItem('drawings') || '[]');
-            drawings.push({ image: dataUrl, date: new Date().toISOString() });
+            drawings.push({ image: dataUrl, date: new Date().toISOString(), author: currentUser });
             localStorage.setItem('drawings', JSON.stringify(drawings));
             loadDrawingGallery();
             alert('Рисунок сохранен в галерею!');
+            
+            // Уведомление о новом рисунке
+            sendTelegramNotification(
+                getRecipientKey(),
+                `<b>${getCurrentDisplayName()}</b> сохранил(а) новый рисунок в галерею! 🎨`,
+                '🎨'
+            );
         }
 
         function newDrawing() {
@@ -1803,6 +2005,9 @@
             const html = drawings.map((drawing, index) => `
                 <div class="gallery-item">
                     <img src="${drawing.image}" alt="Drawing ${index + 1}">
+                    <div style="padding: 10px; background: white; font-size: 0.8em; color: var(--color-text-light);">
+                        ${drawing.author || 'Unknown'} • ${new Date(drawing.date).toLocaleDateString('ru-RU')}
+                    </div>
                     <button class="delete-btn" onclick="deleteDrawing(${index})" style="position: absolute; top: 5px; right: 5px; background: white; border-radius: 50%; width: 30px; height: 30px;">×</button>
                 </div>
             `).join('');
@@ -1826,6 +2031,15 @@
                 localStorage.setItem(`media_${type}`, JSON.stringify(media));
                 input.value = '';
                 renderMedia(type);
+                
+                // Уведомление о медиа
+                const typeNames = { reading: 'книгу', watching: 'фильм/сериал', listening: 'музыку' };
+                const typeEmojis = { reading: '📖', watching: '📺', listening: '🎵' };
+                sendTelegramNotification(
+                    getRecipientKey(),
+                    `<b>${getCurrentDisplayName()}</b> добавил(а) ${typeNames[type]}:\n\n${typeEmojis[type]} <i>${text}</i>`,
+                    typeEmojis[type]
+                );
             }
         }
 
@@ -1836,7 +2050,7 @@
                 <div class="media-item">
                     <h4>${icons[type]} ${item.text}</h4>
                     <div class="media-author">${item.user} • ${new Date(item.date).toLocaleDateString('ru-RU')}</div>
-                    <button class="delete-btn" onclick="deleteMedia('${type}', ${index})">×</button>
+                    <button class="delete-btn" onclick="deleteMedia('${type}', ${index})" style="position: absolute; top: 10px; right: 10px;">×</button>
                 </div>
             `).join('');
             document.getElementById(`${type}List`).innerHTML = html || '<p style="text-align: center; color: var(--color-text-light);">Пока ничего не добавлено</p>';
@@ -1861,11 +2075,18 @@
             const date = document.getElementById('capsuleDate').value;
             if (text && date) {
                 const capsules = JSON.parse(localStorage.getItem('timeCapsules') || '[]');
-                capsules.push({ text, openDate: date, createdAt: new Date().toISOString(), opened: false });
+                capsules.push({ text, openDate: date, createdAt: new Date().toISOString(), opened: false, author: currentUser });
                 localStorage.setItem('timeCapsules', JSON.stringify(capsules));
                 document.getElementById('capsuleInput').value = '';
                 document.getElementById('capsuleDate').value = '';
                 renderTimeCapsules();
+                
+                // Уведомление о капсуле времени
+                sendTelegramNotification(
+                    getRecipientKey(),
+                    `<b>${getCurrentDisplayName()}</b> создал(а) капсулу времени! ⏰\n\nОткроется: ${new Date(date).toLocaleDateString('ru-RU')}`,
+                    '⏰'
+                );
             }
         }
 
@@ -1879,6 +2100,7 @@
                     <div class="list-item">
                         <div class="list-item-content">
                             <div class="list-item-text">${canOpen ? '🔓' : '🔒'} ${canOpen || capsule.opened ? capsule.text : 'Капсула откроется ' + openDate.toLocaleDateString('ru-RU')}</div>
+                            ${capsule.author ? `<div class="list-item-date">От: ${capsule.author}</div>` : ''}
                         </div>
                         ${canOpen && !capsule.opened ? `<button class="btn btn-small btn-primary" onclick="openCapsule(${index})">Открыть</button>` : ''}
                     </div>
@@ -1892,6 +2114,13 @@
             capsules[index].opened = true;
             localStorage.setItem('timeCapsules', JSON.stringify(capsules));
             renderTimeCapsules();
+            
+            // Уведомление об открытии капсулы
+            sendTelegramNotification(
+                getRecipientKey(),
+                `<b>${getCurrentDisplayName()}</b> открыл(а) капсулу времени! 🔓\n\n<i>${capsules[index].text}</i>`,
+                '⏰'
+            );
         }
 
         function showRandomCompliment() {
@@ -1905,6 +2134,13 @@
             localStorage.setItem('moods', JSON.stringify(moods));
             renderMoodHistory();
             alert(`Настроение сохранено: ${emoji} ${mood}`);
+            
+            // Уведомление о настроении
+            sendTelegramNotification(
+                getRecipientKey(),
+                `<b>${getCurrentDisplayName()}</b> сейчас чувствует:\n\n${emoji} <i>${mood}</i>`,
+                '😊'
+            );
         }
 
         function renderMoodHistory() {
@@ -1912,7 +2148,7 @@
             const recent = moods.slice(-5).reverse();
             const html = recent.map(m => `
                 <div style="display: flex; justify-content: space-between; padding: 10px; background: var(--color-bg); border-radius: 8px; margin-top: 10px;">
-                    <span>${m.emoji} ${m.mood}</span>
+                    <span>${m.emoji} ${m.mood} • ${m.user}</span>
                     <span style="color: var(--color-text-light); font-size: 0.85em;">${new Date(m.date).toLocaleDateString('ru-RU')}</span>
                 </div>
             `).join('');
@@ -1927,6 +2163,13 @@
                 localStorage.setItem('gratitudes', JSON.stringify(gratitudes));
                 document.getElementById('gratitudeInput').value = '';
                 renderGratitudes();
+                
+                // Уведомление о благодарности
+                sendTelegramNotification(
+                    getRecipientKey(),
+                    `<b>${getCurrentDisplayName()}</b> благодарен за:\n\n🙏 <i>${text}</i>`,
+                    '🙏'
+                );
             }
         }
 
@@ -1959,6 +2202,13 @@
                 localStorage.setItem('music', JSON.stringify(music));
                 document.getElementById('musicInput').value = '';
                 renderMusic();
+                
+                // Уведомление о музыке
+                sendTelegramNotification(
+                    getRecipientKey(),
+                    `<b>${getCurrentDisplayName()}</b> добавил(а) песню в плейлист:\n\n🎵 <i>${text}</i>`,
+                    '🎵'
+                );
             }
         }
 
@@ -2020,6 +2270,18 @@
             heart.style.top = y + 'px';
             document.body.appendChild(heart);
             setTimeout(() => heart.remove(), 3000);
+            
+            // Уведомление о сигнале любви
+            const signals = {
+                '❤️': 'отправил(а) тебе сердечко',
+                '💋': 'послал(а) поцелуй',
+                '🤗': 'обнимает тебя'
+            };
+            sendTelegramNotification(
+                getRecipientKey(),
+                `<b>${getCurrentDisplayName()}</b> ${signals[emoji] || 'отправил(а) сигнал'}!`,
+                emoji
+            );
         }
 
         // Tab switching
@@ -2037,8 +2299,79 @@
                 document.getElementById('loginScreen').style.display = 'flex';
                 document.getElementById('loginUsername').value = '';
                 document.getElementById('loginPassword').value = '';
+                currentUser = null;
+                currentUserKey = null;
             }
         }
     </script>
 </body>
 </html>
+```
+
+## Что изменено:
+
+### 1. **Две учетные записи**
+- Суриката: логин `surikat`, пароль `chelovek`
+- Кота: логин `kot`, пароль `chelovek`
+
+### 2. **Telegram уведомления работают для обоих**
+Когда ЛЮБОЙ пользователь что-то делает, ВТОРОЙ получает уведомление:
+- Отправка сообщений в чат
+- Добавление желаний, планов, мест, идей, целей
+- Отправка открыток
+- Загрузка изображений
+- Сохранение рисунков
+- Добавление музыки, книг, фильмов
+- Создание капсул времени
+- Отправка сигналов любви (❤️💋🤗)
+- Изменение настроения
+- Добавление благодарностей
+
+### 3. **Инструкция по настройке Telegram Bot**:
+
+**Шаг 1: Создайте бота**
+1. Откройте Telegram
+2. Найдите `@BotFather`
+3. Отправьте `/newbot`
+4. Следуйте инструкциям и получите **токен бота**
+
+**Шаг 2: Получите Chat ID для каждого**
+1. Откройте диалог с вашим ботом
+2. Отправьте любое сообщение (например, "Привет")
+3. Откройте в браузере: `https://api.telegram.org/bot<ВАШ_ТОКЕН>/getUpdates`
+4. Найдите `"chat":{"id":123456789}` - это ваш Chat ID
+
+**Шаг 3: Вставьте в код**
+```javascript
+const TELEGRAM_CONFIG = {
+    enabled: true,
+    botToken: '123456789:ABCdefGHIjklMNOpqrsTUVwxyz', // Ваш токен
+    chatIds: {
+        surikat: '123456789', // Chat ID Суриката
+        kot: '987654321' // Chat ID Кота
+    }
+};
+```
+
+Теперь уведомления будут приходить обоим пользователям в зависимости от того, кто выполняет действия! 💕
+
+[1](https://stackoverflow.com/questions/31197659/how-to-send-request-to-telegram-bot-api)
+[2](https://core.telegram.org/bots/api)
+[3](https://gist.github.com/dideler/85de4d64f66c1966788c1b2304b9caf1)
+[4](https://snnkv.com/articles/telegram-bot-notifications/)
+[5](https://github.com/Cale-Torino/Telegram_Bot_API_Quick_Example)
+[6](https://stackoverflow.com/questions/31078710/how-to-obtain-telegram-chat-id-for-a-specific-user)
+[7](https://core.telegram.org/method/messages.sendMessage)
+[8](https://community.latenode.com/t/whats-the-process-for-obtaining-a-telegram-bots-chat-id/16182)
+[9](https://habr.com/ru/articles/306222/)
+[10](https://gist.github.com/nafiesl/4ad622f344cd1dc3bb1ecbe468ff9f8a)
+[11](https://telegram-bot-sdk.readme.io/reference/sendmessage)
+[12](https://gist.github.com/nafiesl/4ad622f344cd1dc3bb1ecbe468ff9f8a?permalink_comment_id=5291449)
+[13](https://skillbox.ru/media/code/telegram-bot-api/)
+[14](https://stackoverflow.com/questions/32423837/telegram-bot-how-to-get-a-group-chat-id)
+[15](https://grammy.dev/guide/basics)
+[16](https://ramziv.com/article/6)
+[17](https://help.1forma.ru/Admin_Manual/smart_http_bot.htm)
+[18](https://community.openhab.org/t/solved-telegram-cant-get-chat-id/43870)
+[19](https://www.youtube.com/watch?v=l5YDtSLGhqk)
+[20](https://gist.github.com/nafiesl/4ad622f344cd1dc3bb1ecbe468ff9f8a?permalink_comment_id=5720909)
